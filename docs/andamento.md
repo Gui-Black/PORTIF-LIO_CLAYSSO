@@ -1,43 +1,44 @@
 # Andamento do projeto
 
-## Autorização atual
+## Estado atual
 
-Etapa 1 autorizada em 6 de novembro de 2026. As próximas etapas serão retomadas com o usuário a partir do planejamento consolidado.
+Etapa 1 concluída e commitada pelo usuário. Etapa 2 autorizada em 6 de novembro de 2026, implementada e aguardando avaliação visual no computador e no celular.
 
-## Preparação
+## Etapa 2
 
-- [x] Conferir a pasta e o repositório inicial.
-- [x] Confirmar Node.js e npm disponíveis.
-- [x] Registrar escopo, decisões, roteiro visual e pendências.
-- [x] Criar a base React, TypeScript e Vite.
-- [x] Configurar lint, formatação e exclusão de arquivos locais do Git.
-- [x] Concluir instalação das dependências.
-- [x] Validar lint, formatação, tipos e build.
-- [x] Verificar a execução local por HTTP.
-- [ ] Configurar a identidade Git e registrar o primeiro commit.
+- [x] Definir paleta, fontes e composição inicial.
+- [x] Preservar as sete fotos recebidas fora de `dist`.
+- [x] Usar três fotos reais fornecidas pelo usuário na demonstração.
+- [x] Implementar cabeçalho responsivo e navegação por âncoras.
+- [x] Implementar revelação pela rolagem e mudança de atmosfera.
+- [x] Incluir foco visível, textos alternativos e movimento reduzido.
+- [x] Verificar lint, formatação, tipos e build.
+- [x] Verificar resposta HTTP da página e das três imagens.
+- [ ] Conferir visual e interações no desktop e no celular.
+- [ ] Receber aprovação visual da direção proposta.
+- [ ] Revisar e commitar a entrega pelo usuário.
 
-## Verificações
+## Verificações executadas
 
-Verificações executadas em 6 de novembro de 2026.
+| Verificação                        | Resultado                                                   |
+| ---------------------------------- | ----------------------------------------------------------- |
+| `npm run check`                    | ESLint, Prettier, TypeScript e build aprovados              |
+| Página e imagens no servidor local | HTTP 200                                                    |
+| Fotos preservadas                  | Sete arquivos em `assets/fotografias`; três cópias públicas |
+| Conferência visual                 | Bloqueada nesta sessão                                      |
 
-| Verificação                        | Resultado                                                                                                             |
-| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `npm run check`                    | Aprovado, incluindo ESLint, Prettier, TypeScript e build do Vite                                                      |
-| `npm audit`                        | Zero vulnerabilidades reportadas após a atualização das ferramentas e a substituição transitiva documentada no README |
-| Servidor local                     | HTTP 200 na página inicial, no ponto de entrada e no componente App                                                   |
-| Proteção de arquivos locais no Git | `node_modules`, `dist`, `.env` e `.env.local` ignorados                                                               |
-| Conferência visual no navegador    | Pendente, a abertura da prévia integrada retornou erro                                                                |
+A abertura da prévia integrada retornou erro. A tentativa de usar o navegador disponível foi interrompida pela ferramenta porque ela não conseguiu determinar a URL atual com confiança. Assim, menu, teclado, recortes, responsividade e movimento reduzido foram implementados e revisados no código, mas ainda precisam de validação no navegador. HTTP e build não substituem essa avaliação.
 
-A página atual é provisória e serve para conferir a estrutura inicial. As verificações por HTTP e build não substituem a conferência visual. Testes das funcionalidades de negócio serão introduzidos junto de suas implementações.
+Para abrir a demonstração, execute `npm run dev` e acesse o endereço mostrado no terminal. O roteiro de avaliação está em [Direção visual](visual.md).
 
-O npm emite um aviso sobre a configuração `http-proxy` do ambiente hospedeiro. A instalação e as verificações terminaram com sucesso. Essa configuração externa ao projeto foi preservada.
+O npm mantém um aviso sobre `http-proxy` do ambiente hospedeiro, sem impedir as verificações. Nenhuma dependência nova foi adicionada nesta etapa.
 
-Para abrir localmente a página provisória, execute `npm run dev` e use o endereço informado no terminal.
+## Versionamento
 
-## Pendências de versionamento
+O commit inicial `d340730` está na branch `main`, conectada ao GitHub. O usuário continuará fazendo os commits. A etapa 2 está disponível na árvore de trabalho para revisão.
 
-O repositório está na branch `main`, ainda sem commits, sem remoto e sem nome e e-mail configurados para autoria. Esses dados precisam ser fornecidos pelo responsável antes do primeiro commit e da conexão ao GitHub.
+Sugestão de mensagem: `Cria visual inicial do portfólio com fotos e animações`.
 
 ## Próxima entrega
 
-Etapa 2, base visual e uma seção demonstrativa da rolagem, incluindo seleção de imagens, paleta, tipografia, acessibilidade e conferência em telas pequenas e grandes.
+Após a avaliação visual, etapa 3: galeria, filtros e detalhe com dados locais. O número do WhatsApp ainda precisa ser confirmado antes da inclusão do contato.

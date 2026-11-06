@@ -1,10 +1,10 @@
-# Aprendizado da etapa 1
+# Aprendizado do projeto
 
 ## Como a aplicação começa
 
 O navegador recebe `index.html`, que contém um elemento com identificador `root`. O arquivo `src/main.tsx` encontra esse elemento e pede ao React para renderizar `App` dentro dele.
 
-`App` é um componente, uma função que descreve parte da interface usando JSX. Nesta etapa, ele apresenta somente a marca e uma mensagem provisória.
+`App` é um componente, uma função que descreve parte da interface usando JSX. Na etapa 1 ele apresentava uma mensagem provisória. Na etapa 2 compõe `SiteHeader` e `HomePage`.
 
 ## React, TypeScript e Vite
 
@@ -33,6 +33,22 @@ React e React DOM são dependências da aplicação. As ferramentas de desenvolv
 
 ## Um exercício curto
 
-Depois de iniciar `npm run dev`, localize a mensagem em `src/app/App.tsx` e altere o texto. Observe a atualização no navegador e consulte `git diff` para ver exatamente o que mudou. Em seguida, execute `npm run check`.
+Depois de iniciar `npm run dev`, localize o título em `src/features/home/HomePage.tsx` e altere o texto. Observe a atualização no navegador e consulte `git diff` para ver exatamente o que mudou. Em seguida, execute `npm run check`.
 
-Esse exercício conecta componente, ambiente local, validação e versionamento. O commit deve ser feito depois de revisar a alteração e configurar sua identidade de autoria.
+Esse exercício conecta componente, ambiente local, validação e versionamento. O commit deve ser feito depois de revisar a alteração.
+
+## Etapa 2 — componentes, estado e efeitos
+
+`SiteHeader` cuida da navegação e usa `useState` para guardar se o menu está aberto. Quando esse valor muda, React atualiza o botão e a navegação. `HomePage` descreve as seções e `ArrowIcon` evita repetir o mesmo SVG.
+
+`useScrollExperience` concentra o comportamento de rolagem. `useRef` permite acessar o elemento da página. `useEffect` conecta os observadores e eventos depois da montagem, devolvendo uma função de limpeza para removê-los quando o componente sair da tela. Isso também permite o ciclo extra de montagem e limpeza do StrictMode durante o desenvolvimento.
+
+`IntersectionObserver` avisa quando um elemento entra na área visível. A revelação acontece uma vez. Para a mudança de atmosfera, `requestAnimationFrame` agrupa eventos de rolagem e atualiza uma variável CSS, sem renderizar toda a árvore React a cada movimento.
+
+As cores e fontes ficam em `tokens.css`. Os estilos do cabeçalho ficam junto dele, e os da página ficam em `features/home`. Essa separação acompanha responsabilidades concretas.
+
+## Arquivos de entrada e saída
+
+`src` contém código que o Vite processa. `public` contém arquivos copiados para a versão final. `dist` é gerada pelo build e não deve receber arquivos que precisam ser preservados. As fotos fornecidas ficam guardadas em `assets/fotografias`, e três cópias usadas na página ficam em `public/images`.
+
+Como exercício, altere `--accent` em `tokens.css`, veja quais elementos compartilham essa cor e restaure o valor antes de avaliar o conjunto. Depois, navegue pelo site usando somente Tab e Enter.

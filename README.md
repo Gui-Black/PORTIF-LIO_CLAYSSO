@@ -6,11 +6,14 @@ O projeto também serve como percurso de aprendizado em React, TypeScript e Supa
 
 ## Estado atual
 
-Base técnica da etapa 1 preparada e verificada. A aplicação contém uma página provisória para conferir React e Vite. O layout final, as galerias, as animações e o painel pertencem às próximas etapas. O primeiro commit depende da definição de autoria Git.
+Etapa 2 implementada para avaliação visual. A página apresenta fotografias fornecidas pelo usuário, paleta acolhedora, menu responsivo, revelação de conteúdo pela rolagem e passagem para um ambiente escuro. O contato disponível abre o Instagram. Galeria, filtros, WhatsApp e painel ficam para as próximas entregas.
+
+Lint, formatação, tipos, build e carregamento HTTP passaram. A conferência visual no computador e no celular ainda está pendente devido à indisponibilidade do controle do navegador nesta sessão.
 
 - [Planejamento aprovado](docs/planejamento.md)
 - [Andamento e verificações](docs/andamento.md)
-- [Guia da primeira etapa](docs/aprendizado.md)
+- [Guia de aprendizado](docs/aprendizado.md)
+- [Direção visual e fotografias](docs/visual.md)
 
 ## Requisitos
 
@@ -55,19 +58,24 @@ Esse comando verifica lint, formatação, tipos e a geração da versão de prod
 
 ## Estrutura atual
 
-| Arquivo              | Responsabilidade                               |
-| -------------------- | ---------------------------------------------- |
-| `index.html`         | Documento HTML e elemento de montagem do React |
-| `src/main.tsx`       | Inicialização da aplicação                     |
-| `src/app/App.tsx`    | Componente inicial provisório                  |
-| `src/app/styles.css` | Estilos básicos da página provisória           |
-| `vite.config.ts`     | Configuração do Vite e integração com React    |
-| `tsconfig.*.json`    | Regras de verificação de tipos                 |
-| `eslint.config.js`   | Regras de análise do código                    |
-| `.prettierrc.json`   | Padrão de formatação                           |
-| `docs`               | Planejamento, andamento e aprendizado          |
+| Arquivo              | Responsabilidade                                |
+| -------------------- | ----------------------------------------------- |
+| `index.html`         | Documento HTML e elemento de montagem do React  |
+| `src/main.tsx`       | Inicialização da aplicação                      |
+| `src/app/App.tsx`    | Composição do cabeçalho e da página inicial     |
+| `src/app/styles.css` | Estilos globais e acessibilidade                |
+| `src/app/tokens.css` | Cores, fontes e espaçamento lateral             |
+| `src/components`     | Cabeçalho responsivo e ícone compartilhado      |
+| `src/features/home`  | Narrativa visual e comportamento de rolagem     |
+| `public/images`      | Três fotografias utilizadas na página           |
+| `assets/fotografias` | Sete arquivos recebidos, preservados sem edição |
+| `vite.config.ts`     | Configuração do Vite e integração com React     |
+| `tsconfig.*.json`    | Regras de verificação de tipos                  |
+| `eslint.config.js`   | Regras de análise do código                     |
+| `.prettierrc.json`   | Padrão de formatação                            |
+| `docs`               | Planejamento, andamento e aprendizado           |
 
-As pastas de funcionalidades serão criadas junto de suas primeiras implementações. As dependências do Supabase e de animação serão avaliadas nas etapas em que forem utilizadas.
+A animação desta demonstração usa recursos nativos do navegador, sem dependência adicional. O Supabase será integrado na etapa correspondente.
 
 ## Padrões de desenvolvimento
 
@@ -85,6 +93,6 @@ As pastas de funcionalidades serão criadas junto de suas primeiras implementaç
 
 A proposta usa `main` como referência estável e branches curtas por funcionalidade. Antes de cada commit, revise `git diff` e execute as verificações correspondentes. Após revisar arquivos novos, adicione somente os arquivos da entrega.
 
-O repositório inicial ainda precisa de identidade de autoria e de um endereço remoto. A configuração será feita com os dados informados pelo responsável.
+O primeiro commit foi registrado pelo usuário e o repositório está conectado ao GitHub. Os próximos commits continuam sob responsabilidade do usuário.
 
 A publicação será tratada na etapa de homologação. O HTML provisório inclui `noindex, nofollow`, que deverá ser revisado antes da publicação oficial.
