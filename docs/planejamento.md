@@ -2,7 +2,7 @@
 
 ## Contexto e autorização
 
-Planejamento consolidado em 6 de novembro de 2026 a partir desta conversa. O nome público é provisório. O usuário aprovou iniciar somente a etapa 1, de preparação do ambiente, documentação e estrutura inicial.
+Planejamento consolidado em 6 de novembro de 2026 a partir desta conversa. O nome público é provisório. O usuário autorizou as etapas 1, 2 e, na continuidade, a etapa 3 de galeria, filtros e detalhe com dados locais. A integração do banco será a próxima etapa.
 
 O objetivo é apresentar a fotografia de Claysso em Guarulhos e São Paulo e facilitar o contato pelo WhatsApp e Instagram. O desenvolvimento também deve permitir ao usuário aprender conceitos e apresentar o projeto em seu currículo.
 
@@ -52,7 +52,7 @@ A proposta combina off-white quente, grafite e detalhes em terracota. A tipograf
 
 As transições devem preservar a rolagem natural, a leitura e o controle do visitante. Entradas de texto entre 400 e 600 ms são uma hipótese para testes. No celular, os movimentos serão simplificados. A preferência por movimento reduzido será respeitada.
 
-O visitante também terá acesso direto a Trabalhos, Sobre e Contato. Ao voltar da página de um trabalho, o planejamento prevê recuperar o filtro e a posição na listagem.
+O visitante também terá acesso direto a Trabalhos, Sobre e Contato. Ao voltar da página de um trabalho, o planejamento prevê recuperar o filtro e a posição na listagem. Na etapa 3, os endereços usam parâmetros de consulta (`?trabalho=...`) para permitir abertura direta em hospedagem estática. Renderização para buscadores e prévias sociais continua pendente antes da integração definitiva e da publicação.
 
 ## Telas e administração
 

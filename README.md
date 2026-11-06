@@ -6,14 +6,15 @@ O projeto também serve como percurso de aprendizado em React, TypeScript e Supa
 
 ## Estado atual
 
-Etapa 2 implementada para avaliação visual. A página apresenta fotografias fornecidas pelo usuário, paleta acolhedora, menu responsivo, revelação de conteúdo pela rolagem e passagem para um ambiente escuro. O contato disponível abre o Instagram. Galeria, filtros, WhatsApp e painel ficam para as próximas entregas.
+Etapa 3 implementada com dados locais. A página combina a narrativa visual com uma galeria filtrável, duas seleções de fotografias, endereço próprio para cada seleção e visualização ampliada. O contato disponível abre o Instagram. WhatsApp, banco e painel ficam para as próximas entregas.
 
-Lint, formatação, tipos, build e carregamento HTTP passaram. A conferência visual no computador e no celular ainda está pendente devido à indisponibilidade do controle do navegador nesta sessão.
+Lint, formatação, oito testes automatizados, tipos, build e carregamento HTTP passaram. A conferência visual e das interações no computador e no celular ainda está pendente devido à indisponibilidade da prévia nesta sessão.
 
 - [Planejamento aprovado](docs/planejamento.md)
 - [Andamento e verificações](docs/andamento.md)
 - [Guia de aprendizado](docs/aprendizado.md)
 - [Direção visual e fotografias](docs/visual.md)
+- [Galeria, navegação e roteiro de validação](docs/galeria.md)
 
 ## Requisitos
 
@@ -42,7 +43,7 @@ Abra o endereço local informado pelo Vite. Nesta etapa, a aplicação funciona 
 npm run check
 ```
 
-Esse comando verifica lint, formatação, tipos e a geração da versão de produção. Os comandos também podem ser executados separadamente.
+Esse comando verifica lint, formatação, testes, tipos e a geração da versão de produção. `npm run test` executa os testes com o executor nativo do Node, sem dependência adicional. Os demais comandos também podem ser executados separadamente.
 
 | Comando                | Finalidade                                   |
 | ---------------------- | -------------------------------------------- |
@@ -58,22 +59,24 @@ Esse comando verifica lint, formatação, tipos e a geração da versão de prod
 
 ## Estrutura atual
 
-| Arquivo              | Responsabilidade                                |
-| -------------------- | ----------------------------------------------- |
-| `index.html`         | Documento HTML e elemento de montagem do React  |
-| `src/main.tsx`       | Inicialização da aplicação                      |
-| `src/app/App.tsx`    | Composição do cabeçalho e da página inicial     |
-| `src/app/styles.css` | Estilos globais e acessibilidade                |
-| `src/app/tokens.css` | Cores, fontes e espaçamento lateral             |
-| `src/components`     | Cabeçalho responsivo e ícone compartilhado      |
-| `src/features/home`  | Narrativa visual e comportamento de rolagem     |
-| `public/images`      | Três fotografias utilizadas na página           |
-| `assets/fotografias` | Sete arquivos recebidos, preservados sem edição |
-| `vite.config.ts`     | Configuração do Vite e integração com React     |
-| `tsconfig.*.json`    | Regras de verificação de tipos                  |
-| `eslint.config.js`   | Regras de análise do código                     |
-| `.prettierrc.json`   | Padrão de formatação                            |
-| `docs`               | Planejamento, andamento e aprendizado           |
+| Arquivo                  | Responsabilidade                                |
+| ------------------------ | ----------------------------------------------- |
+| `index.html`             | Documento HTML e elemento de montagem do React  |
+| `src/main.tsx`           | Inicialização da aplicação                      |
+| `src/app/App.tsx`        | Navegação entre início e detalhe do trabalho    |
+| `src/app/styles.css`     | Estilos globais e acessibilidade                |
+| `src/app/tokens.css`     | Cores, fontes e espaçamento lateral             |
+| `src/components`         | Cabeçalho responsivo e ícone compartilhado      |
+| `src/features/home`      | Narrativa visual e comportamento de rolagem     |
+| `src/features/portfolio` | Dados locais, galeria, detalhe e visualizador   |
+| `public/images`          | Seis fotografias utilizadas no portfólio        |
+| `tests`                  | Integridade dos dados e lógica de navegação     |
+| `assets/fotografias`     | Sete arquivos recebidos, preservados sem edição |
+| `vite.config.ts`         | Configuração do Vite e integração com React     |
+| `tsconfig.*.json`        | Regras de verificação de tipos                  |
+| `eslint.config.js`       | Regras de análise do código                     |
+| `.prettierrc.json`       | Padrão de formatação                            |
+| `docs`                   | Planejamento, andamento e aprendizado           |
 
 A animação desta demonstração usa recursos nativos do navegador, sem dependência adicional. O Supabase será integrado na etapa correspondente.
 

@@ -52,3 +52,15 @@ As cores e fontes ficam em `tokens.css`. Os estilos do cabeçalho ficam junto de
 `src` contém código que o Vite processa. `public` contém arquivos copiados para a versão final. `dist` é gerada pelo build e não deve receber arquivos que precisam ser preservados. As fotos fornecidas ficam guardadas em `assets/fotografias`, e três cópias usadas na página ficam em `public/images`.
 
 Como exercício, altere `--accent` em `tokens.css`, veja quais elementos compartilham essa cor e restaure o valor antes de avaliar o conjunto. Depois, navegue pelo site usando somente Tab e Enter.
+
+## Etapa 3 — dados, estado e navegação
+
+Os tipos `Photo` e `Work` descrevem o formato dos dados. A página recebe um trabalho por propriedades, sem precisar saber se ele veio de um arquivo ou de um banco. Na integração futura, essa separação permitirá trocar a origem dos dados com menos mudanças na interface.
+
+A lista filtrada é calculada a partir da categoria atual. Não precisamos guardar duas listas em estado e mantê-las sincronizadas. Já a foto selecionada no visualizador usa `useState`, porque muda por uma ação do visitante.
+
+O filtro e o trabalho aparecem na URL. Assim, recarregar ou copiar o endereço mantém o destino. `useSyncExternalStore` conecta React a essa informação externa; `pushState`, `replaceState` e `popstate` controlam a navegação. O estado do histórico guarda a posição e o cartão para o retorno.
+
+O elemento nativo `dialog`, aberto por `showModal`, coloca o visualizador em uma camada modal e torna o restante da página inativo. O efeito guarda o foco anterior e a rolagem do corpo e restaura ambos na limpeza. Os testes de lógica não substituem a conferência desse comportamento no navegador.
+
+Como exercício, filtre Casamentos, abra uma seleção e observe a URL. Volte e confira o filtro. Depois veja `portfolioUrl` e acompanhe de onde vêm seus argumentos. Execute `npm run test` para conhecer os casos que protegem a navegação e os dados.

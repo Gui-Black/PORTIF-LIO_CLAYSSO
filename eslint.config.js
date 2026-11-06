@@ -32,6 +32,12 @@ export default tseslint.config(
     languageOptions: { globals: globals.node },
   },
   {
+    files: ['tests/**/*.mjs'],
+    extends: [js.configs.recommended],
+    languageOptions: { globals: globals.node },
+    rules: { 'no-unused-vars': ['error', { argsIgnorePattern: '^_' }] },
+  },
+  {
     files: ['**/*.js'],
     extends: [js.configs.recommended],
   },

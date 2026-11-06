@@ -1,6 +1,7 @@
 @import './tokens.css';
 @import '../components/layout/site-header.css';
 @import '../features/home/home.css';
+@import '../features/portfolio/portfolio.css';
 
 * {
   box-sizing: border-box;

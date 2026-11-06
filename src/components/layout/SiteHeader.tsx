@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { ArrowIcon } from '../ui/ArrowIcon'
 
-export function SiteHeader() {
+export function SiteHeader({ homePrefix = '' }: { homePrefix?: string }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const headerRef = useRef<HTMLElement>(null)
   const toggleRef = useRef<HTMLButtonElement>(null)
@@ -40,7 +40,7 @@ export function SiteHeader() {
     <header className="site-header page-width" ref={headerRef}>
       <a
         className="wordmark"
-        href="#inicio"
+        href={`${homePrefix}#inicio`}
         aria-label="Click’s do Morty — início"
         onClick={() => setMenuOpen(false)}
       >
@@ -67,15 +67,15 @@ export function SiteHeader() {
         className={`site-nav${menuOpen ? ' is-open' : ''}`}
         aria-label="Navegação principal"
       >
-        <a href="#olhar" onClick={() => setMenuOpen(false)}>
+        <a href={`${homePrefix}#olhar`} onClick={() => setMenuOpen(false)}>
           O olhar
         </a>
-        <a href="#atmosfera" onClick={() => setMenuOpen(false)}>
-          Atmosferas
+        <a href={`${homePrefix}#trabalhos`} onClick={() => setMenuOpen(false)}>
+          Trabalhos
         </a>
         <a
           className="nav-contact"
-          href="#contato"
+          href={`${homePrefix}#contato`}
           onClick={() => setMenuOpen(false)}
         >
           Vamos conversar <ArrowIcon diagonal />

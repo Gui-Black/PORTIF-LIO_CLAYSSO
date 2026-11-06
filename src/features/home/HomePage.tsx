@@ -1,9 +1,11 @@
 import { ArrowIcon } from '../../components/ui/ArrowIcon'
 import { useScrollExperience } from './useScrollExperience'
+import { PortfolioSection } from '../portfolio/PortfolioSection'
+import type { PortfolioFilter } from '../portfolio/portfolio-data'
 
 const instagramUrl = 'https://www.instagram.com/clicksmortyofc/'
 
-export function HomePage() {
+export function HomePage({ filter }: { filter: PortfolioFilter }) {
   const pageRef = useScrollExperience()
 
   return (
@@ -157,6 +159,8 @@ export function HomePage() {
           </div>
         </div>
       </section>
+
+      <PortfolioSection filter={filter} />
 
       <section
         className="contact page-width"
