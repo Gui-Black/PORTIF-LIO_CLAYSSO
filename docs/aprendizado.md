@@ -64,3 +64,17 @@ O filtro e o trabalho aparecem na URL. Assim, recarregar ou copiar o endereço m
 O elemento nativo `dialog`, aberto por `showModal`, coloca o visualizador em uma camada modal e torna o restante da página inativo. O efeito guarda o foco anterior e a rolagem do corpo e restaura ambos na limpeza. Os testes de lógica não substituem a conferência desse comportamento no navegador.
 
 Como exercício, filtre Casamentos, abra uma seleção e observe a URL. Volte e confira o filtro. Depois veja `portfolioUrl` e acompanhe de onde vêm seus argumentos. Execute `npm run test` para conhecer os casos que protegem a navegação e os dados.
+
+## Etapa 4 — banco, integridade e permissões
+
+Uma migração é um arquivo SQL que descreve uma mudança reproduzível no banco. O seed cria dados de exemplo. Nesta etapa, os testes aplicam os dois em PostgreSQL em memória, sem modificar uma conta Supabase.
+
+Uma chave primária identifica uma linha. Uma chave estrangeira garante que uma referência exista. Usamos também chaves compostas: não basta a capa ser uma foto existente, ela precisa pertencer à mesma versão. O banco rejeita a associação errada mesmo que a interface contenha um bug.
+
+`GRANT` define quais operações e colunas uma conta pode acessar. RLS decide quais linhas ela pode enxergar ou modificar. Estar autenticado não significa ser administrador; essa autorização vem de uma tabela privada, gerenciada por um operador confiável.
+
+O trabalho é uma identidade estável. O rascunho é seu conteúdo em edição. Publicar valida e sela uma versão, depois faz o trabalho apontar para ela. As duas alterações acontecem na mesma transação: ou ambas são concluídas, ou nenhuma é aplicada.
+
+A revisão funciona como um número de edição. Se uma foto muda depois que a tela foi carregada, publicar com o número antigo falha e pede uma atualização. Os bloqueios de linha mantêm a publicação e alterações de fotos coordenadas; o teste com múltiplas conexões ainda será feito no Supabase local completo.
+
+Como exercício, rode `npm run test:db` e encontre o teste de uma capa pertencente a outro trabalho. A seguir, veja a chave `version_cover_fk` na primeira migração. Depois acompanhe o teste em que uma publicação falha e a versão anterior continua visível. Esses casos mostram por que as regras também pertencem ao banco.

@@ -6,15 +6,16 @@ O projeto também serve como percurso de aprendizado em React, TypeScript e Supa
 
 ## Estado atual
 
-Etapa 3 implementada com dados locais. A página combina a narrativa visual com uma galeria filtrável, duas seleções de fotografias, endereço próprio para cada seleção e visualização ampliada. O contato disponível abre o Instagram. WhatsApp, banco e painel ficam para as próximas entregas.
+Fundação da etapa 4 implementada e validada em memória: migrações PostgreSQL para Supabase, permissões e publicação transacional. A interface mantém a galeria da etapa 3 com dados locais. A conexão ao Supabase, o login e o painel serão integrados nas próximas entregas. A execução com os serviços Supabase completos ainda está pendente.
 
-Lint, formatação, oito testes automatizados, tipos, build e carregamento HTTP passaram. A conferência visual e das interações no computador e no celular ainda está pendente devido à indisponibilidade da prévia nesta sessão.
+A validação separa testes da aplicação, testes SQL/RLS e integração com serviços reais. Os resultados e limites ficam em `docs/andamento.md`. A publicação na Vercel foi adiada por decisão do usuário; o desenvolvimento continua localmente.
 
 - [Planejamento aprovado](docs/planejamento.md)
 - [Andamento e verificações](docs/andamento.md)
 - [Guia de aprendizado](docs/aprendizado.md)
 - [Direção visual e fotografias](docs/visual.md)
 - [Galeria, navegação e roteiro de validação](docs/galeria.md)
+- [Banco, permissões e execução local](docs/banco.md)
 
 ## Requisitos
 
@@ -43,17 +44,19 @@ Abra o endereço local informado pelo Vite. Nesta etapa, a aplicação funciona 
 npm run check
 ```
 
-Esse comando verifica lint, formatação, testes, tipos e a geração da versão de produção. `npm run test` executa os testes com o executor nativo do Node, sem dependência adicional. Os demais comandos também podem ser executados separadamente.
+Esse comando verifica lint, formatação, testes, tipos e a geração da versão de produção. `npm run test` usa o executor nativo do Node. Os testes de banco usam PGlite como dependência de desenvolvimento e não exigem Docker, credenciais ou conta Supabase. Essa dependência não é importada pela aplicação React.
 
-| Comando                | Finalidade                                   |
-| ---------------------- | -------------------------------------------- |
-| `npm run dev`          | Iniciar o ambiente local de desenvolvimento  |
-| `npm run typecheck`    | Verificar os tipos TypeScript                |
-| `npm run lint`         | Verificar regras de qualidade e uso de React |
-| `npm run format:check` | Conferir a formatação                        |
-| `npm run format`       | Aplicar a formatação padronizada             |
-| `npm run build`        | Verificar os tipos e gerar a pasta `dist`    |
-| `npm run preview`      | Servir localmente a versão gerada em `dist`  |
+| Comando                | Finalidade                                    |
+| ---------------------- | --------------------------------------------- |
+| `npm run dev`          | Iniciar o ambiente local de desenvolvimento   |
+| `npm run test`         | Executar os testes de aplicação e banco       |
+| `npm run test:db`      | Executar somente os testes SQL/RLS em memória |
+| `npm run typecheck`    | Verificar os tipos TypeScript                 |
+| `npm run lint`         | Verificar regras de qualidade e uso de React  |
+| `npm run format:check` | Conferir a formatação                         |
+| `npm run format`       | Aplicar a formatação padronizada              |
+| `npm run build`        | Verificar os tipos e gerar a pasta `dist`     |
+| `npm run preview`      | Servir localmente a versão gerada em `dist`   |
 
 `preview` pressupõe uma execução bem-sucedida de `build` e serve para conferência local.
 
@@ -71,6 +74,9 @@ Esse comando verifica lint, formatação, testes, tipos e a geração da versão
 | `src/features/portfolio` | Dados locais, galeria, detalhe e visualizador   |
 | `public/images`          | Seis fotografias utilizadas no portfólio        |
 | `tests`                  | Integridade dos dados e lógica de navegação     |
+| `supabase/migrations`    | Tabelas, restrições, RLS, publicação e Storage  |
+| `supabase/seed.sql`      | Dados fictícios para ambiente local             |
+| `supabase/config.toml`   | Configuração proposta para o Supabase local     |
 | `assets/fotografias`     | Sete arquivos recebidos, preservados sem edição |
 | `vite.config.ts`         | Configuração do Vite e integração com React     |
 | `tsconfig.*.json`        | Regras de verificação de tipos                  |

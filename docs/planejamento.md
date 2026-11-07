@@ -2,7 +2,9 @@
 
 ## Contexto e autorização
 
-Planejamento consolidado em 6 de novembro de 2026 a partir desta conversa. O nome público é provisório. O usuário autorizou as etapas 1, 2 e, na continuidade, a etapa 3 de galeria, filtros e detalhe com dados locais. A integração do banco será a próxima etapa.
+Planejamento consolidado em 6 de novembro de 2026 e atualizado em 7 de novembro de 2026. O nome público é provisório. As etapas 1 a 3 foram implementadas. A etapa 4 foi autorizada para preparar e testar localmente a estrutura do banco para Supabase, antes da conexão a serviços externos.
+
+A proposta de publicação contínua pela Vercel/GitHub foi analisada e adiada pelo usuário. Continuamos localmente; não há autorização ativa para deploys, pushes automáticos ou alterações de infraestrutura remota. Os commits continuam sob responsabilidade do usuário.
 
 O objetivo é apresentar a fotografia de Claysso em Guarulhos e São Paulo e facilitar o contato pelo WhatsApp e Instagram. O desenvolvimento também deve permitir ao usuário aprender conceitos e apresentar o projeto em seu currículo.
 
@@ -83,7 +85,7 @@ Na etapa 4 serão definidos os tipos SQL, índices, chaves estrangeiras e restri
 
 A publicação será uma operação transacional. Deve verificar autorização, título, categoria, fotografias prontas e capa válida antes de trocar a versão pública. Restrições precisam valer também quando a operação é chamada fora da interface.
 
-A remoção de uma categoria exige realocar os trabalhos associados, inclusive seus rascunhos. Referências entre versões e arquivos serão verificadas antes de qualquer exclusão física, para preservar imagens ainda utilizadas.
+A remoção de uma categoria exige realocar os trabalhos associados, inclusive seus rascunhos. Na fundação da etapa 4, categorias utilizadas por versões seladas ficam preservadas por restrição referencial. A gestão futura deverá definir arquivamento ou migração controlada do histórico. Referências entre versões e arquivos serão verificadas antes de qualquer exclusão física, para preservar imagens ainda utilizadas.
 
 ## Acesso e arquivos
 
@@ -130,7 +132,7 @@ As etapas posteriores dependem das anteriores. A estratégia de renderização, 
 
 ## Qualidade, versionamento e aprendizado
 
-Cada entrega deve incluir explicação breve dos conceitos, implementação, validação e revisão para commit. Usar `main` como referência estável e branches curtas por funcionalidade. O nome e o e-mail do autor e o remoto precisam ser definidos pelo responsável.
+Cada entrega deve incluir explicação breve dos conceitos, implementação, validação e revisão para commit. Usar `main` como referência estável e branches curtas por funcionalidade. O repositório já está conectado ao GitHub; os commits e pushes são feitos pelo usuário. A proposta de `develop` associada a Preview será retomada junto da publicação, se aprovada.
 
 Testes planejados devem cobrir publicação transacional, tentativas repetidas, permissões de visitante e administrador, arquivos de rascunho, expiração dos links, uploads incompletos e alterações concorrentes. Avaliar também navegação por teclado, responsividade e movimento reduzido.
 
