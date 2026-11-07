@@ -17,7 +17,7 @@ O primeiro comando aplica migrações pendentes sem resetar o banco. A configura
 2. Criar um trabalho com título, endereço único (slug) e categoria.
 3. Editar a descrição e salvar as informações antes de enviar fotografias.
 4. Enviar uma foto de teste com descrição acessível. São aceitos JPEG, PNG e WebP de até 10 MiB, dimensões até 20.000 pixels por lado e até 40 milhões de pixels no navegador.
-5. Selecionar a capa e salvar. Conferir as fotos antes de publicar.
+5. Clicar em **Usar como capa** na miniatura desejada; essa ação salva a capa. Conferir a lista de pendências da etapa 3 antes de publicar.
 6. Abrir a página pública em janela anônima antes da publicação: o rascunho não deve aparecer.
 7. Publicar o trabalho e atualizar a página pública. Conferir capa, categoria, página do trabalho e visualizador.
 8. Em duas abas administrativas, abrir o mesmo rascunho e salvar alterações diferentes. Uma gravação com revisão antiga deve ser recusada, solicitando recarregamento.
@@ -26,6 +26,18 @@ O primeiro comando aplica migrações pendentes sem resetar o banco. A configura
 Usar imagens autorizadas para teste e dados fictícios. Registrar os resultados reais em `docs/andamento.md`.
 
 ## Como funciona
+
+### Organização do painel
+
+A lista separa o estado dos trabalhos e mantém o formulário de criação recolhido em **Criar novo trabalho**. O endereço é sugerido a partir do título e continua editável antes da criação. O editor apresenta três etapas numeradas, capa escolhida pela miniatura, confirmação do que foi salvo e uma lista das condições para publicar. Recarregar dados fica em uma opção secundária. Mensagens explicam por que uma ação está indisponível.
+
+Referências de interface consultadas:
+
+- [NN/g: progressive disclosure](https://www.nngroup.com/articles/progressive-disclosure/) — apresentar opções secundárias sob demanda.
+- [GOV.UK: task list](https://design-system.service.gov.uk/components/task-list/) — identificar tarefas e seus estados.
+- [DWP: diferença entre upload e envio final](https://design-system.dwp.gov.uk/contribute/file-upload/upload-submit) — distinguir adicionar arquivos de concluir a publicação.
+
+As referências orientam a adaptação; o layout mantém as cores e a identidade do portfólio. A revisão automatizada não substitui o teste visual em navegador e celular.
 
 Um trabalho tem um endereço estável e uma versão em rascunho. Salvar aumenta sua revisão; essa revisão impede que uma aba sobrescreva silenciosamente alterações feitas em outra. Publicar valida as fotos e a capa, fecha a versão e aponta o trabalho para ela em uma transação.
 

@@ -3,13 +3,14 @@
 }
 .draft-photos {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
   gap: 20px;
-  padding-left: 20px;
+  padding: 0;
+  list-style: none;
 }
 .draft-photos img {
   width: 100%;
-  height: 180px;
+  height: 220px;
   object-fit: contain;
   background: var(--night);
 }
@@ -19,6 +20,7 @@
   padding: 20px;
   margin: 20px 0;
   min-width: 0;
+  background: #fffcf7;
 }
 .work-management legend {
   padding: 0 8px;
@@ -47,12 +49,17 @@
 .management-list {
   padding: 0;
   list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 20px;
 }
 .management-list li {
   display: grid;
   gap: 12px;
-  border-bottom: 1px solid var(--line);
-  padding: 18px 0;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 22px;
+  align-content: start;
 }
 .work-management button {
   margin: 4px 8px 4px 0;
@@ -62,10 +69,150 @@
   outline-offset: 3px;
 }
 .auth-page:has(.work-management) {
-  grid-template-columns: minmax(230px, 0.6fr) minmax(0, 1.4fr);
+  display: block;
 }
 .auth-card:has(.work-management) {
-  width: min(100%, 1000px);
+  width: min(100%, 1120px);
+  margin: 0 auto;
+  padding: 32px clamp(20px, 4vw, 56px) 64px;
+}
+.auth-page:has(.work-management) .auth-story {
+  padding: 18px max(24px, calc((100vw - 1008px) / 2));
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+}
+.auth-page:has(.work-management) .auth-story p,
+.auth-card:has(.work-management) > .auth-eyebrow,
+.auth-card:has(.work-management) > h1,
+.auth-card:has(.work-management) > .auth-badge {
+  display: none;
+}
+.auth-card:has(.work-management) > .auth-back:last-child {
+  display: none;
+}
+.work-management h3 {
+  font-size: 1.4rem;
+  margin-top: 40px;
+}
+.management-overview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 24px 0;
+}
+.management-overview > span {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px 24px;
+  background: #fffcf7;
+}
+.management-overview strong {
+  font-size: 1.5rem;
+  margin-right: 8px;
+}
+.management-status {
+  font-weight: 600;
+  color: #3e503c;
+}
+.management-tools {
+  margin: 18px 0;
+  font-size: 0.95rem;
+}
+.work-management summary {
+  cursor: pointer;
+  padding: 14px 0;
+}
+.work-management summary:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+.new-work {
+  border: 1px solid var(--accent-dark);
+  border-radius: 12px;
+  padding: 8px 24px;
+  margin-top: 24px;
+  background: #fffcf7;
+}
+.new-work > summary {
+  font-weight: 600;
+  font-size: 1.15rem;
+}
+.new-work > summary span {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin-top: 8px;
+}
+.editor-feedback {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #f4f0e7;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent-dark);
+  border-radius: 8px;
+  padding: 10px 20px;
+  margin: 20px 0;
+  box-shadow: 0 4px 15px #2428200a;
+}
+.editor-feedback p {
+  margin: 6px 0;
+}
+.management-notice,
+.management-empty {
+  padding: 18px;
+  background: #eee8db;
+  border-radius: 8px;
+}
+.draft-photos li {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fffcf7;
+  padding: 12px;
+}
+.draft-photos li > p {
+  margin: 12px 0;
+}
+.draft-photos button {
+  width: 100%;
+}
+.draft-photos button[aria-pressed='true'] {
+  background: #e7eedf;
+  border-color: #4a613f;
+  color: #304327;
+  opacity: 1;
+}
+.publication-checklist {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.auth-card .work-management .auth-primary {
+  width: auto;
+  min-width: 180px;
+}
+.auth-card .work-management button:disabled {
+  cursor: not-allowed;
+}
+@media (max-width: 600px) {
+  .editor-feedback {
+    position: static;
+  }
+  .auth-card .work-management .auth-primary {
+    width: 100%;
+  }
+  .draft-photos {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  }
+  .draft-photos img {
+    height: 180px;
+  }
+  .new-work {
+    padding: 8px 14px;
+  }
 }
 @media (max-width: 760px) {
   .auth-page:has(.work-management) {

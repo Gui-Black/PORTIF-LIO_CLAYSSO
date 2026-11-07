@@ -106,7 +106,29 @@ export function WorkManager({
   return (
     <section className="work-management" aria-labelledby="manager-title">
       <h2 id="manager-title">Seus trabalhos</h2>
-      <p>Prepare uma seleção em rascunho e publique quando estiver pronta.</p>
+      <p>
+        Continue um trabalho abaixo ou abra “Criar novo trabalho”. Rascunhos
+        ficam privados até você publicar.
+      </p>
+      {catalog ? (
+        <div className="management-overview">
+          <span>
+            <strong>
+              {
+                catalog.works.filter((work) => !work.published_version_id)
+                  .length
+              }
+            </strong>{' '}
+            em rascunho
+          </span>
+          <span>
+            <strong>
+              {catalog.works.filter((work) => work.published_version_id).length}
+            </strong>{' '}
+            publicados
+          </span>
+        </div>
+      ) : null}
       {disabled ? <p role="status">Revalidando acesso…</p> : null}
       {error ? (
         <p role="alert">
@@ -136,7 +158,7 @@ export function WorkManager({
                     <strong>
                       {draft?.title || published?.title || work.slug}
                     </strong>
-                    <span>
+                    <span className="management-status">
                       {work.published_version_id ? 'Publicado' : 'Rascunho'}
                     </span>
                     {draft ? (
@@ -145,7 +167,7 @@ export function WorkManager({
                         disabled={dirty}
                         onClick={() => setSelected(draft.id)}
                       >
-                        Abrir rascunho
+                        Continuar edição
                       </button>
                     ) : (
                       <p>
@@ -170,66 +192,103 @@ export function WorkManager({
               <p>Seu primeiro trabalho começa aqui.</p>
             ) : null}
           </fieldset>
-          <form
-            onSubmit={create}
-            onChange={() => setDirty(true)}
-            className="management-form"
-          >
-            <fieldset disabled={disabled || busy}>
-              <legend>Novo trabalho</legend>
-              <label>
-                Título
-                <input name="title" required maxLength={140} />
-              </label>
-              <label>
-                Endereço do trabalho
-                <input
-                  name="slug"
-                  required
-                  maxLength={120}
-                  pattern="[a-z0-9]+(-[a-z0-9]+)*"
-                  placeholder="ensaio-no-jardim"
-                  aria-describedby="slug-help"
-                />
-              </label>
-              <small id="slug-help">
-                Use letras minúsculas sem acentos, números e hífens. O endereço
-                será mantido após a criação.
-              </small>
-              <label>
-                Categoria
-                <select name="category" required defaultValue="">
-                  <option value="" disabled>
-                    Selecione
-                  </option>
-                  {catalog.categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
+          <details className="new-work" open={dirty || undefined}>
+            <summary>
+              Criar novo trabalho <span>Comece pelo nome e pela categoria</span>
+            </summary>
+            <form
+              onSubmit={create}
+              onChange={() => setDirty(true)}
+              className="management-form"
+            >
+              <fieldset disabled={disabled || busy}>
+                <legend>Novo trabalho</legend>
+                <label>
+                  Título
+                  <input
+                    name="title"
+                    required
+                    maxLength={140}
+                    placeholder="Ex.: Casamento da Ana e do João"
+                    onChange={(event) => {
+                      const slug =
+                        event.currentTarget.form?.elements.namedItem('slug')
+                      if (
+                        slug instanceof HTMLInputElement &&
+                        !slug.dataset.edited
+                      ) {
+                        slug.value = event.currentTarget.value
+                          .normalize('NFD')
+                          .replace(/[\u0300-\u036f]/g, '')
+                          .toLowerCase()
+                          .replace(/[^a-z0-9]+/g, '-')
+                          .replace(/^-|-$/g, '')
+                          .slice(0, 120)
+                          .replace(/-$/g, '')
+                      }
+                    }}
+                  />
+                </label>
+                <label>
+                  Endereço do trabalho
+                  <input
+                    name="slug"
+                    required
+                    maxLength={120}
+                    pattern="[a-z0-9]+(-[a-z0-9]+)*"
+                    placeholder="ensaio-no-jardim"
+                    aria-describedby="slug-help"
+                    onInput={(event) => {
+                      event.currentTarget.dataset.edited = 'true'
+                    }}
+                  />
+                </label>
+                <small id="slug-help">
+                  Preenchido a partir do título. Você pode ajustar usando letras
+                  sem acentos, números e hífens. Este será o endereço do
+                  trabalho no site.
+                </small>
+                <label>
+                  Categoria
+                  <select name="category" required defaultValue="">
+                    <option value="" disabled>
+                      Selecione
                     </option>
-                  ))}
-                </select>
-              </label>
-              <button
-                type="button"
-                onClick={(event) => {
-                  if (
-                    !dirty ||
-                    window.confirm('Limpar as informações deste novo trabalho?')
-                  ) {
-                    event.currentTarget.form?.reset()
-                    creation.current = null
-                    setDirty(false)
-                    setReload((value) => value + 1)
-                  }
-                }}
-              >
-                Limpar formulário
-              </button>
-              <button type="submit" className="auth-primary">
-                {busy ? 'Criando…' : 'Criar rascunho'}
-              </button>
-            </fieldset>
-          </form>
+                    {catalog.categories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    if (
+                      !dirty ||
+                      window.confirm(
+                        'Limpar as informações deste novo trabalho?',
+                      )
+                    ) {
+                      event.currentTarget.form?.reset()
+                      const slug =
+                        event.currentTarget.form?.elements.namedItem('slug')
+                      if (slug instanceof HTMLInputElement)
+                        delete slug.dataset.edited
+                      creation.current = null
+                      setDirty(false)
+                      setReload((value) => value + 1)
+                    }
+                  }}
+                >
+                  Limpar formulário
+                </button>
+                <button type="submit" className="auth-primary">
+                  {busy ? 'Criando…' : 'Criar rascunho'}
+                </button>
+              </fieldset>
+            </form>
+          </details>
         </>
       )}
     </section>

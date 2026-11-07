@@ -10,6 +10,7 @@ import {
 } from './work-service'
 import { prepareUpload, sendPhoto, type UploadJob } from './upload'
 import { DraftPhoto } from './DraftPhoto'
+import { UploadFailure } from './upload'
 
 export function WorkEditor({
   client,
@@ -93,7 +94,14 @@ export function WorkEditor({
         setMessage(success)
       }
     } catch (failure) {
-      if (alive.current) setError(managementError(failure))
+      if (alive.current) {
+        setMessage('')
+        setError(
+          failure instanceof UploadFailure
+            ? failure.message
+            : managementError(failure),
+        )
+      }
     } finally {
       lock.current = false
       if (alive.current) setBusy(false)
@@ -116,10 +124,9 @@ export function WorkEditor({
             versionId,
           )
         } catch (failure) {
-          setMessage(
+          throw new UploadFailure(
             failure instanceof Error ? failure.message : 'Arquivo inválido.',
           )
-          throw failure
         }
       }
       try {
@@ -176,13 +183,42 @@ export function WorkEditor({
         Voltar aos trabalhos
       </button>
       <h2 id="editor-title">
-        {data?.version.sealed_at ? 'Trabalho publicado' : 'Preparar seleção'}
+        {data?.version.sealed_at
+          ? 'Trabalho publicado'
+          : form?.title || 'Preparar trabalho'}
       </h2>
-      <p role="status">{message}</p>
-      {error ? <p role="alert">{error}</p> : null}
-      <button type="button" disabled={busy} onClick={refresh}>
-        Recarregar rascunho
-      </button>
+      <div className="editor-feedback" aria-live="polite">
+        <p className="management-status">
+          {busy
+            ? 'Salvando ou enviando. Aguarde…'
+            : failedUpload
+              ? 'Envio pendente — retome na etapa 2'
+              : dirty
+                ? 'Você tem alterações para salvar'
+                : data?.version.sealed_at
+                  ? 'Visível na galeria'
+                  : 'Rascunho — ainda não aparece na galeria'}
+        </p>
+        {message ? <p role="status">{message}</p> : null}
+        {error ? (
+          <p role="alert" className="auth-error">
+            {error}
+          </p>
+        ) : null}
+        {disabled ? (
+          <p>Confirmando seu acesso. Aguarde para continuar.</p>
+        ) : null}
+      </div>
+      <details className="management-tools">
+        <summary>Precisa atualizar os dados desta tela?</summary>
+        <p>
+          Use se você alterou este trabalho em outra aba. Um envio pendente será
+          preservado.
+        </p>
+        <button type="button" disabled={busy} onClick={refresh}>
+          Recarregar rascunho
+        </button>
+      </details>
       {!data || !form ? (
         <p role="status">Carregando…</p>
       ) : data.version.sealed_at ? (
@@ -200,9 +236,11 @@ export function WorkEditor({
             className="management-form"
           >
             <fieldset disabled={disabled || busy || failedUpload}>
-              <legend>
-                Informações e capa {dirty ? '— alterações não salvas' : ''}
-              </legend>
+              <legend>1. Sobre o trabalho</legend>
+              <p>
+                Dê um nome à seleção e conte um pouco sobre ela. Salve antes de
+                adicionar fotos.
+              </p>
               <label>
                 Título
                 <input
@@ -229,7 +267,7 @@ export function WorkEditor({
                 </select>
               </label>
               <label>
-                Descrição
+                Descrição (opcional)
                 <textarea
                   maxLength={5000}
                   rows={4}
@@ -239,36 +277,65 @@ export function WorkEditor({
                   }
                 />
               </label>
-              <label>
-                Capa
-                <select
-                  value={form.cover_photo_id ?? ''}
-                  onChange={(event) =>
-                    change({ cover_photo_id: event.target.value || null })
-                  }
-                >
-                  <option value="">Selecione após enviar uma foto</option>
-                  {data.photos.map((photo, index) => (
-                    <option key={photo.id} value={photo.id}>
-                      {index + 1}. {photo.alt_text}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <button type="submit" disabled={!dirty}>
-                Salvar alterações
+              <button type="submit" className="auth-primary" disabled={!dirty}>
+                {dirty ? 'Salvar informações' : 'Informações salvas'}
               </button>
             </fieldset>
           </form>
-          <h3>Fotografias ({data.photos.length})</h3>
+          <h3>2. Fotos e capa</h3>
+          <p>
+            Adicione uma foto por vez. Depois, escolha a imagem que vai
+            representar este trabalho na galeria.
+          </p>
+          {dirty ? (
+            <p className="management-notice">
+              Salve as informações na etapa 1 para continuar com as fotos.
+            </p>
+          ) : null}
+          {failedUpload ? (
+            <p className="management-notice">
+              Há um envio pendente. Use “Retomar envio pendente” abaixo para
+              concluir antes de editar ou publicar.
+            </p>
+          ) : null}
+          <p className="management-status">
+            {data.photos.length} foto(s) adicionada(s)
+          </p>
+          {!data.photos.length ? (
+            <p className="management-empty">
+              Sua seleção começa com a primeira foto. Use o formulário abaixo.
+            </p>
+          ) : null}
           <ol className="draft-photos">
             {data.photos.map((photo) => (
               <li key={photo.id}>
                 <DraftPhoto client={client} photo={photo} />
-                <p>
-                  {photo.alt_text}
-                  {photo.id === form.cover_photo_id ? ' — capa' : ''}
-                </p>
+                <p>{photo.alt_text}</p>
+                <button
+                  type="button"
+                  aria-pressed={photo.id === form.cover_photo_id}
+                  disabled={
+                    disabled ||
+                    busy ||
+                    dirty ||
+                    failedUpload ||
+                    photo.id === form.cover_photo_id
+                  }
+                  onClick={() =>
+                    void perform(
+                      () =>
+                        saveDraft(client, {
+                          ...form,
+                          cover_photo_id: photo.id,
+                        }),
+                      'Capa salva. Você pode adicionar mais fotos ou publicar na etapa 3.',
+                    )
+                  }
+                >
+                  {photo.id === form.cover_photo_id
+                    ? '✓ Capa escolhida'
+                    : 'Usar como capa'}
+                </button>
               </li>
             ))}
           </ol>
@@ -282,6 +349,9 @@ export function WorkEditor({
           >
             <fieldset disabled={disabled || busy || dirty}>
               <legend>Adicionar uma fotografia</legend>
+              {failedUpload && error ? (
+                <p className="auth-error">{error}</p>
+              ) : null}
               <label>
                 Arquivo
                 <input
@@ -293,16 +363,21 @@ export function WorkEditor({
                 />
               </label>
               <label>
-                Descrição acessível
+                O que aparece nesta foto?
                 <input
                   name="alt"
                   maxLength={500}
                   required={!failedUpload}
                   disabled={failedUpload}
                   placeholder="Descreva o que aparece na fotografia"
+                  aria-describedby="photo-description-help"
                 />
               </label>
-              <button type="submit">
+              <small id="photo-description-help">
+                Exemplo: casal abraçado em um jardim. Essa descrição ajuda quem
+                usa leitor de tela.
+              </small>
+              <button type="submit" className="auth-primary">
                 {failedUpload
                   ? 'Retomar envio pendente'
                   : busy
@@ -341,10 +416,32 @@ export function WorkEditor({
               !form.cover_photo_id
             }
           >
-            <legend>Revisar e publicar</legend>
+            <legend>3. Publicar na galeria</legend>
+            <ul className="publication-checklist">
+              <li>
+                {dirty
+                  ? '○ Salve as informações do trabalho'
+                  : '✓ Informações salvas'}
+              </li>
+              <li>
+                {data.photos.length
+                  ? '✓ Fotos adicionadas'
+                  : '○ Adicione pelo menos uma foto'}
+              </li>
+              <li>
+                {form.cover_photo_id
+                  ? '✓ Capa escolhida'
+                  : '○ Escolha a capa na etapa 2'}
+              </li>
+              {failedUpload ? (
+                <li>○ Conclua o envio pendente na etapa 2</li>
+              ) : null}
+            </ul>
             <p>
-              A publicação torna esta seleção acessível na galeria. Confirme que
-              as fotos podem ser exibidas publicamente.
+              As fotos só aparecem para visitantes depois de publicar. Confira
+              sua seleção e confirme que tem autorização para exibi-la. Nesta
+              versão do painel, um trabalho publicado ainda não pode ser
+              editado.
             </p>
             <button
               className="auth-primary"

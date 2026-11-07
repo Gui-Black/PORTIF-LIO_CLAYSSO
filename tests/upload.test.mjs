@@ -3,11 +3,74 @@ import test from 'node:test'
 import {
   imageExtension,
   sendPhoto,
+  describeUploadFailure,
 } from '../src/features/work-management/upload.ts'
 import {
   filterWorks,
   findWork,
 } from '../src/features/portfolio/portfolio-data.ts'
+
+test('falhas de envio distinguem migração, revisão e Storage sem expor resposta interna', () => {
+  assert.match(
+    describeUploadFailure({ code: 'PGRST202' }, 'database'),
+    /supabase:migrate/,
+  )
+  assert.match(
+    describeUploadFailure({ code: '40001' }, 'database'),
+    /Recarregar rascunho/,
+  )
+  assert.match(
+    describeUploadFailure({ statusCode: '403' }, 'storage'),
+    /autorização/,
+  )
+  assert.match(
+    describeUploadFailure({ name: 'TimeoutError' }, 'storage'),
+    /tempo de espera/,
+  )
+  assert.doesNotMatch(
+    describeUploadFailure({ message: 'token-secreto' }, 'storage'),
+    /token-secreto/,
+  )
+})
+
+test('falha ao conferir tentativa anterior não dispara outro upload', async () => {
+  const client = {
+    storage: {
+      from: () => ({
+        download: async () => ({ error: { statusCode: '503' }, data: null }),
+        upload: async () => assert.fail('não deve reenviar sem conferir'),
+      }),
+    },
+    rpc: async () => assert.fail('não deve associar arquivo não confirmado'),
+  }
+  await assert.rejects(
+    sendPhoto(
+      client,
+      { attempted: true, path: 'version/id.jpg' },
+      'version',
+      0,
+      () => {},
+    ),
+    /conferir o arquivo/,
+  )
+})
+
+test('arquivo enviado com RPC ausente orienta migração e preserva tentativa', async () => {
+  const client = {
+    storage: { from: () => ({ upload: async () => ({ error: null }) }) },
+    rpc: async () => ({ error: { code: 'PGRST202' } }),
+  }
+  const job = {
+    attempted: false,
+    path: 'version/id.jpg',
+    file: new File(['foto'], 'foto.jpg', { type: 'image/jpeg' }),
+  }
+  await assert.rejects(
+    sendPhoto(client, job, 'version', 0, () => {}),
+    /supabase:migrate/,
+  )
+  assert.equal(job.attempted, true)
+})
 
 test('tipo declarado deve corresponder à assinatura básica do arquivo', () => {
   assert.equal(
