@@ -94,14 +94,20 @@ export function parseFilter(value: string | null): PortfolioFilter {
   return categories.find((category) => category.slug === value)?.slug ?? 'todos'
 }
 
-export function filterWorks(filter: PortfolioFilter): readonly Work[] {
+export function filterWorks(
+  filter: PortfolioFilter,
+  source: readonly Work[] = works,
+): readonly Work[] {
   return filter === 'todos'
-    ? works
-    : works.filter((work) => work.category === filter)
+    ? source
+    : source.filter((work) => work.category === filter)
 }
 
-export function findWork(slug: string): Work | undefined {
-  return works.find((work) => work.slug === slug)
+export function findWork(
+  slug: string,
+  source: readonly Work[] = works,
+): Work | undefined {
+  return source.find((work) => work.slug === slug)
 }
 
 export function categoryName(slug: CategorySlug) {

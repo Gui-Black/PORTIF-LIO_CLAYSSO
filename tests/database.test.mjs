@@ -603,6 +603,191 @@ test('Storage privado resiste a política permissiva e bloqueia sobrescrita e ex
     )
   }))
 
+test('consulta de administrador retorna apenas o acesso da sessão e não aceita visitantes', () =>
+  isolated(async () => {
+    await asRole('anon')
+    await fails('select public.current_user_is_administrator()')
+    await asRole('authenticated', memberId)
+    assert.equal(
+      (
+        await db.query(
+          'select public.current_user_is_administrator() as allowed',
+        )
+      ).rows[0].allowed,
+      false,
+    )
+    await asRole('authenticated', adminId)
+    assert.equal(
+      (
+        await db.query(
+          'select public.current_user_is_administrator() as allowed',
+        )
+      ).rows[0].allowed,
+      true,
+    )
+    await fails('select * from private.administrators')
+    await asRole('postgres')
+    await db.query('delete from private.administrators where user_id = $1', [
+      adminId,
+    ])
+    await asRole('authenticated', adminId)
+    assert.equal(
+      (
+        await db.query(
+          'select public.current_user_is_administrator() as allowed',
+        )
+      ).rows[0].allowed,
+      false,
+    )
+  }))
+
+test('criação pelo painel é atômica, idempotente e restrita à administração', () =>
+  isolated(async () => {
+    const work = randomUUID(),
+      version = randomUUID()
+    const sql = 'select public.create_work_draft($1,$2,$3,$4,$5,$6)'
+    const args = [
+      work,
+      version,
+      'novo-trabalho',
+      'Novo trabalho',
+      categoryId,
+      'Descrição',
+    ]
+    await asRole('anon')
+    await fails(sql, args)
+    await asRole('authenticated', memberId)
+    await fails(sql, args)
+    await asRole('authenticated', adminId)
+    await fails(sql, [...args.slice(0, 4), randomUUID(), 'Descrição'], '23503')
+    assert.equal(
+      (await db.query('select id from public.works where id=$1', [work])).rows
+        .length,
+      0,
+    )
+    await db.query(sql, args)
+    await db.query(sql, args)
+    assert.equal(
+      (
+        await db.query('select id from public.work_versions where work_id=$1', [
+          work,
+        ])
+      ).rows.length,
+      1,
+    )
+    await fails(
+      sql,
+      [work, version, 'outro-endereco', 'Novo', categoryId, ''],
+      '23514',
+    )
+  }))
+
+test('salvamento do painel rejeita revisão antiga e capa de outra versão', () =>
+  isolated(async () => {
+    const work = await draft(),
+      other = await readyDraft()
+    await asRole('authenticated', adminId)
+    const sql = 'select public.save_work_draft($1,$2,$3,$4,$5,$6)'
+    const initial = await revision(work.versionId)
+    await fails(
+      sql,
+      [work.versionId, initial, 'Título', categoryId, '', other.cover.id],
+      '23503',
+    )
+    await db.query(sql, [
+      work.versionId,
+      initial,
+      'Título salvo',
+      categoryId,
+      'Descrição',
+      null,
+    ])
+    await fails(
+      sql,
+      [work.versionId, initial, 'Sobrescrita', categoryId, '', null],
+      '40001',
+    )
+    assert.equal(
+      (
+        await db.query('select title from public.work_versions where id=$1', [
+          work.versionId,
+        ])
+      ).rows[0].title,
+      'Título salvo',
+    )
+  }))
+
+test('foto exige Storage confirmado, permite retomada sem duplicar e publica pelo fluxo do painel', () =>
+  isolated(async () => {
+    const work = await draft(),
+      photoId = randomUUID()
+    const path = `${work.versionId}/${photoId}.jpg`
+    const sql = 'select public.attach_work_photo($1,$2,$3,$4,$5,$6,$7)'
+    const args = [
+      work.versionId,
+      await revision(work.versionId),
+      photoId,
+      path,
+      'Foto de teste',
+      800,
+      600,
+    ]
+    await asRole('authenticated', memberId)
+    await fails(sql, args)
+    await asRole('authenticated', adminId)
+    await fails(sql, args, '23514')
+    await asRole('postgres')
+    await db.query(
+      "insert into storage.objects(bucket_id,name,metadata) values('portfolio',$1,$2)",
+      [path, JSON.stringify({ mimetype: 'image/jpeg', size: 3000 })],
+    )
+    await asRole('authenticated', adminId)
+    await db.query(sql, args)
+    const afterPhoto = await revision(work.versionId)
+    await db.query(sql, args)
+    assert.equal(await revision(work.versionId), afterPhoto)
+    assert.equal(
+      (
+        await db.query('select id from public.photos where version_id=$1', [
+          work.versionId,
+        ])
+      ).rows.length,
+      1,
+    )
+    await db.query('select public.save_work_draft($1,$2,$3,$4,$5,$6)', [
+      work.versionId,
+      afterPhoto,
+      'Pronto',
+      categoryId,
+      '',
+      photoId,
+    ])
+    await publish(work)
+    await fails(
+      'select public.save_work_draft($1,$2,$3,$4,$5,$6)',
+      [
+        work.versionId,
+        await revision(work.versionId),
+        'Alterar',
+        categoryId,
+        '',
+        photoId,
+      ],
+      '23514',
+    )
+    await asRole('anon')
+    assert.equal(
+      (await db.query('select id from public.works where id=$1', [work.workId]))
+        .rows.length,
+      1,
+    )
+    assert.equal(
+      (await db.query('select id from storage.objects where name=$1', [path]))
+        .rows.length,
+      1,
+    )
+  }))
+
 test('todas as tabelas da aplicação usam RLS e funções privilegiadas fixam search_path', () =>
   isolated(async () => {
     const tables = await db.query(

@@ -1,5 +1,7 @@
 import { execFileSync, spawnSync } from 'node:child_process'
 import { fileURLToPath } from 'node:url'
+import { writeFileSync } from 'node:fs'
+import { publicEnvironment } from './public-env.mjs'
 import { delimiter, dirname, isAbsolute } from 'node:path'
 import { describeDockerError, resolveDockerCommand } from './docker-command.mjs'
 import { verifyLocalServices } from './verify-local-services.mjs'
@@ -63,11 +65,13 @@ function readLocalStatus(environment) {
 
 try {
   if (
-    !['check', 'start', 'stop', 'status', 'verify'].includes(command) ||
+    !['check', 'start', 'stop', 'status', 'verify', 'env', 'migrate'].includes(
+      command,
+    ) ||
     extraArguments.length
   ) {
     throw new Error(
-      'Use supabase:check, supabase:start, supabase:stop, supabase:status ou supabase:verify, sem argumentos adicionais.',
+      'Use um dos atalhos supabase:check/start/stop/status/verify/env/migrate, sem argumentos adicionais.',
     )
   }
 
@@ -76,6 +80,9 @@ try {
 
   const argumentsList = command === 'check' ? ['--version'] : [command]
   if (command === 'start') argumentsList.push('--network-id', networkName)
+  // CLI 3 usa o banco local por padrão; argumentos remotos não são aceitos aqui.
+  if (command === 'migrate')
+    argumentsList.splice(0, argumentsList.length, 'migration', 'up')
 
   const cliEnvironment = {
     ...commandEnvironment,
@@ -84,6 +91,24 @@ try {
   }
   if (command === 'verify') {
     await verifyLocalServices(readLocalStatus(cliEnvironment))
+  } else if (command === 'env') {
+    const content = publicEnvironment(readLocalStatus(cliEnvironment))
+    try {
+      writeFileSync(new URL('../.env.local', import.meta.url), content, {
+        flag: 'wx',
+        mode: 0o600,
+      })
+    } catch (error) {
+      if (error.code === 'EEXIST')
+        throw new Error(
+          '.env.local já existe e foi preservado. Confira sua configuração antes de alterar.',
+          { cause: error },
+        )
+      throw error
+    }
+    console.log(
+      '.env.local criado somente com URL e chave publicável. Reinicie o Vite.',
+    )
   } else {
     const result = spawnSync(process.execPath, [cliPath, ...argumentsList], {
       cwd: projectRoot,

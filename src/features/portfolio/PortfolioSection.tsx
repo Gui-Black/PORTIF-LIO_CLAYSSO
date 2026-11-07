@@ -5,12 +5,19 @@ import {
   filterWorks,
   portfolioUrl,
   type PortfolioFilter,
+  type Work,
 } from './portfolio-data'
 import { changeFilter, isLocalClick, openWork } from './navigation'
 import { PortfolioImage } from './PortfolioImage'
 
-export function PortfolioSection({ filter }: { filter: PortfolioFilter }) {
-  const filteredWorks = filterWorks(filter)
+export function PortfolioSection({
+  filter,
+  items,
+}: {
+  filter: PortfolioFilter
+  items?: readonly Work[]
+}) {
+  const filteredWorks = filterWorks(filter, items)
   return (
     <section
       className="portfolio page-width"

@@ -8,8 +8,8 @@ export function PortfolioImage({
   photo: Photo
   eager?: boolean
 }) {
-  const [failed, setFailed] = useState(false)
-  if (failed)
+  const [failed, setFailed] = useState<string | null>(null)
+  if (failed === photo.src)
     return (
       <span className="photo-unavailable" role="img" aria-label={photo.alt}>
         Foto indisponível no momento.
@@ -23,7 +23,7 @@ export function PortfolioImage({
       height={photo.height}
       loading={eager ? 'eager' : 'lazy'}
       decoding="async"
-      onError={() => setFailed(true)}
+      onError={() => setFailed(photo.src)}
     />
   )
 }

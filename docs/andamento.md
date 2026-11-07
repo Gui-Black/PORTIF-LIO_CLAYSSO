@@ -2,9 +2,42 @@
 
 ## Estado atual
 
-Etapas 1 a 4 commitadas pelo usuário. Preparação do ambiente Supabase local iniciada em 7 de novembro de 2026, a partir do repositório limpo. A integração completa com os serviços Supabase ainda está pendente.
+Etapa 6 implementada no código em 7 de novembro de 2026. A verificação inicial de leitura dos serviços Supabase passou no terminal do usuário, que também informou ter conseguido criar sua conta. O fluxo completo no navegador ainda precisa de validação.
 
 A publicação contínua na Vercel foi adiada pelo usuário. O desenvolvimento segue local, sem provisionamento remoto ou deploy.
+
+## Etapa 6
+
+- [x] Criar trabalhos e rascunhos por operação atômica, com retomada sem duplicação.
+- [x] Salvar título, descrição, categoria e capa com controle de revisão.
+- [x] Enviar JPEG, PNG e WebP ao bucket privado e retomar falhas de associação.
+- [x] Publicar seleções completas por transação, mantendo versões publicadas imutáveis.
+- [x] Integrar a galeria pública com cliente anônimo separado da sessão administrativa.
+- [x] Paginar consultas para não truncar catálogos no limite de registros da API.
+- [x] Preservar o editor durante revalidação de sessão, bloqueando operações enquanto verifica acesso.
+- [x] Executar lint, formatação, 50 testes, TypeScript e build com sucesso.
+- [ ] Aplicar a migração de gerenciamento no Supabase local real.
+- [ ] Testar upload HTTP, retomada, publicação, acesso anônimo e concorrência em duas abas.
+- [ ] Conferir interação, acessibilidade e layout no navegador.
+
+O acesso ao Docker permanece negado para a sessão automatizada. Os testes usam PGlite e respostas simuladas; nenhuma validação visual ou ponta a ponta foi concluída pelo assistente. Seguir o [roteiro de gerenciamento](gerenciamento.md). Nenhum commit, push ou deploy foi executado. A próxima etapa inclui reordenação, remoção e revisão de trabalhos publicados.
+
+## Etapa 5
+
+- [x] Adicionar SDK Supabase 2.119.0 com versão fixa e zero vulnerabilidades reportadas na instalação.
+- [x] Implementar telas de login, solicitação de recuperação e nova senha.
+- [x] Restaurar sessão, oferecer saída e verificar identidade/autorização no servidor.
+- [x] Bloquear a área administrativa para conta comum e falhas de verificação.
+- [x] Criar migração de consulta da permissão da própria sessão, sem expor administradores.
+- [x] Preparar geração de `.env.local` apenas com URL e chave publicável, preservando arquivo existente.
+- [x] Preparar atalho para migrações locais sem reset ou destino remoto.
+- [x] Executar lint, formatação, 43 testes, TypeScript e build.
+- [ ] Aplicar a nova migração no Supabase real e reiniciar serviços com os redirects atualizados.
+- [ ] Completar configuração das contas fictícias de administrador e visitante (usuário informou criação de conta).
+- [ ] Validar login, sessão, saída, recuperação, revogação e acesso negado em navegador.
+- [ ] Conferir layout, teclado e mensagens em telas pequenas e grandes.
+
+O Docker continua negando acesso à sessão automatizada. Nenhuma conta foi criada e a nova migração não foi aplicada ao banco real pelo assistente. Testes de autorização no banco usam PGlite; testes de serviço usam respostas simuladas. O SDK é carregado em um chunk separado da página pública. Na entrega original desta etapa, a tela administrativa apenas confirmava o acesso; edição e upload foram adicionados na etapa 6. Seguir [Autenticação](autenticacao.md) para ativação e teste local. Nenhum commit, push ou deploy foi executado.
 
 ## Etapa 4
 
@@ -85,4 +118,4 @@ Os commits continuam sob responsabilidade do usuário. Sugestão para esta prepa
 
 ## Próxima entrega
 
-Preparar o Supabase local completo e validar esta fundação pelos serviços reais antes de integrar login, sessão e recuperação da etapa 5. Antes da integração definitiva das páginas públicas, resolver renderização, metadados sociais e acesso às imagens. A conferência visual da galeria continua pendente.
+Concluir a validação real da etapa 5 pelo roteiro de autenticação e depois iniciar cadastro, upload e publicação da etapa 6. Antes da integração definitiva das páginas públicas, resolver renderização, metadados sociais e acesso às imagens. A conferência visual da galeria continua pendente.

@@ -21,9 +21,12 @@
     "supabase:stop": "node scripts/supabase-local.mjs stop",
     "supabase:status": "node scripts/supabase-local.mjs status",
     "supabase:verify": "node scripts/supabase-local.mjs verify",
+    "supabase:env": "node scripts/supabase-local.mjs env",
+    "supabase:migrate": "node scripts/supabase-local.mjs migrate",
     "check": "npm run lint && npm run format:check && npm run test && npm run build"
   },
   "dependencies": {
+    "@supabase/supabase-js": "2.119.0",
     "react": "19.3.1",
     "react-dom": "19.3.1"
   },

@@ -6,7 +6,7 @@ O projeto também serve como percurso de aprendizado em React, TypeScript e Supa
 
 ## Estado atual
 
-Fundação da etapa 4 implementada e validada em memória: migrações PostgreSQL para Supabase, permissões e publicação transacional. A interface mantém a galeria da etapa 3 com dados locais. A conexão ao Supabase, o login e o painel serão integrados nas próximas entregas. A execução com os serviços Supabase completos ainda está pendente.
+Etapa 6 implementada no código: cadastro de trabalhos, edição de rascunhos, upload, seleção de capa e publicação na galeria integrada ao Supabase. A aplicação das migrações e o teste completo no navegador ainda precisam ser confirmados no ambiente local.
 
 A validação separa testes da aplicação, testes SQL/RLS e integração com serviços reais. Os resultados e limites ficam em `docs/andamento.md`. A publicação na Vercel foi adiada por decisão do usuário; o desenvolvimento continua localmente.
 
@@ -17,6 +17,8 @@ A validação separa testes da aplicação, testes SQL/RLS e integração com se
 - [Galeria, navegação e roteiro de validação](docs/galeria.md)
 - [Banco, permissões e execução local](docs/banco.md)
 - [Preparação do Supabase local no Windows](docs/ambiente-local.md)
+- [Login, configuração e contas de teste](docs/autenticacao.md)
+- [Cadastro, fotos e publicação local](docs/gerenciamento.md)
 
 ## Requisitos
 
@@ -37,7 +39,7 @@ npm ci
 npm run dev
 ```
 
-Abra o endereço local informado pelo Vite. Nesta etapa, a aplicação funciona sem variáveis de ambiente ou contas externas.
+Abra o endereço local informado pelo Vite. Sem variáveis de ambiente, a galeria usa dados demonstrativos. A administração e a galeria integrada exigem o Supabase local configurado.
 
 Para preparar a integração com o banco, a CLI Supabase está instalada como dependência de desenvolvimento. Com o Docker Desktop aberto, executar `npm run supabase:check` e `npm run supabase:start`. Após o início terminar, `npm run supabase:verify` confere os serviços e dados de exemplo sem exibir chaves. A integração completa ainda aguarda validação. Consulte o [roteiro do ambiente local](docs/ambiente-local.md), incluindo comandos para parar os serviços e cuidados com dados.
 
