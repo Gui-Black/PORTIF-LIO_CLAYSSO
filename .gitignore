@@ -10,3 +10,4 @@ coverage/
 Thumbs.db
 supabase/.temp/
 supabase/.branches/
+.supabase/

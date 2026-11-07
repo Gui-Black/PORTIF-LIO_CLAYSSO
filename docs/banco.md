@@ -95,23 +95,20 @@ PGlite 0.5.15 executa PostgreSQL 18.6 em memória, somente como dependência de 
 
 Os testes não validam o serviço Auth, JWT real, PostgREST, Storage HTTP, bytes, URLs assinadas nem operações simultâneas em múltiplas conexões. PGlite utiliza uma conexão; o Supabase local está configurado para PostgreSQL 17. A validação na versão real e com serviços completos continua necessária.
 
-## Supabase local completo — pendente
+## Supabase local - verificação inicial aprovada
 
-Docker, Supabase CLI e `psql` não estavam disponíveis no terminal durante a preparação. O `supabase/config.toml` está preparado, mas ainda não foi executado pela CLI. A instalação e a inicialização desses serviços ficam para a preparação do ambiente de integração.
+A CLI Supabase 3.0.0 está instalada nas dependências de desenvolvimento; sua versão e ajuda foram verificadas. Docker Desktop foi instalado pelo usuário, mas esta sessão recebeu acesso negado ao motor Linux. Os serviços completos não foram iniciados por esta sessão. Consulte o [roteiro do ambiente local](ambiente-local.md) para verificar o acesso pelo terminal do usuário, preparar a rede restrita ao computador e validar as migrações.
+
+O usuário iniciou os serviços e compartilhou `npm run supabase:verify` aprovado em 7 de novembro de 2026. Foram confirmadas leituras reais de Auth, categorias, rascunho protegido e bucket privado. Isso não verifica o histórico integral das migrações nem substitui os testes de contas autenticadas, uploads, URLs assinadas e concorrência.
 
 Depois de instalar e validar os pré-requisitos, na raiz do projeto:
 
 ```sh
-supabase start
+npm run supabase:check
+npm run supabase:start
 ```
 
-Para reconstruir apenas um banco local descartável:
-
-```sh
-supabase db reset --local
-```
-
-O reset apaga os dados do banco local antes de reaplicar migrações e seed. Não usar sobre dados que precisam ser preservados. Não é necessário `supabase login`, `supabase link` ou comando remoto para o desenvolvimento local.
+Para reconstruir apenas um banco local descartável, seguir a seção de reset no roteiro, preservando o mesmo `SUPABASE_HOME` usado pelos atalhos. O reset apaga os dados do banco local antes de reaplicar migrações e seed. Não usar sobre dados que precisam ser preservados. Não é necessário `supabase login`, `supabase link` ou comando remoto para o desenvolvimento local.
 
 Portas configuradas: API 54321, banco 54322, Studio 54323 e shadow database 54320. A aplicação Vite permanece em 5173. Não encaminhar essas portas à internet. O cadastro público está desativado.
 

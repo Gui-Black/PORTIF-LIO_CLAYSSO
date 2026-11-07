@@ -16,6 +16,7 @@ A validação separa testes da aplicação, testes SQL/RLS e integração com se
 - [Direção visual e fotografias](docs/visual.md)
 - [Galeria, navegação e roteiro de validação](docs/galeria.md)
 - [Banco, permissões e execução local](docs/banco.md)
+- [Preparação do Supabase local no Windows](docs/ambiente-local.md)
 
 ## Requisitos
 
@@ -37,6 +38,8 @@ npm run dev
 ```
 
 Abra o endereço local informado pelo Vite. Nesta etapa, a aplicação funciona sem variáveis de ambiente ou contas externas.
+
+Para preparar a integração com o banco, a CLI Supabase está instalada como dependência de desenvolvimento. Com o Docker Desktop aberto, executar `npm run supabase:check` e `npm run supabase:start`. Após o início terminar, `npm run supabase:verify` confere os serviços e dados de exemplo sem exibir chaves. A integração completa ainda aguarda validação. Consulte o [roteiro do ambiente local](docs/ambiente-local.md), incluindo comandos para parar os serviços e cuidados com dados.
 
 ## Verificações
 

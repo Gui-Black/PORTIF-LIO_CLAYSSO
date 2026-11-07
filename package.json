@@ -16,6 +16,11 @@
     "format:check": "prettier --check .",
     "test": "node --experimental-strip-types --test tests/*.test.mjs",
     "test:db": "node --test tests/database.test.mjs",
+    "supabase:check": "node scripts/supabase-local.mjs check",
+    "supabase:start": "node scripts/supabase-local.mjs start",
+    "supabase:stop": "node scripts/supabase-local.mjs stop",
+    "supabase:status": "node scripts/supabase-local.mjs status",
+    "supabase:verify": "node scripts/supabase-local.mjs verify",
     "check": "npm run lint && npm run format:check && npm run test && npm run build"
   },
   "dependencies": {
@@ -35,6 +40,7 @@
     "eslint-plugin-react-refresh": "0.5.7",
     "globals": "17.14.0",
     "prettier": "3.9.10",
+    "supabase": "3.0.0",
     "typescript": "6.0.3",
     "typescript-eslint": "8.72.1",
     "vite": "8.3.6"

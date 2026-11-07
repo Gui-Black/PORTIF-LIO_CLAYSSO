@@ -6,7 +6,7 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
-  { ignores: ['dist/**', 'coverage/**'] },
+  { ignores: ['dist/**', 'coverage/**', '.supabase/**'] },
   {
     files: ['**/*.{ts,tsx}'],
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
@@ -32,7 +32,7 @@ export default tseslint.config(
     languageOptions: { globals: globals.node },
   },
   {
-    files: ['tests/**/*.mjs'],
+    files: ['tests/**/*.mjs', 'scripts/**/*.mjs'],
     extends: [js.configs.recommended],
     languageOptions: { globals: globals.node },
     rules: { 'no-unused-vars': ['error', { argsIgnorePattern: '^_' }] },
