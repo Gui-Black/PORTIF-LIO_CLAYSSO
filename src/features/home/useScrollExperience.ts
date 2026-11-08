@@ -9,7 +9,7 @@ export function useScrollExperience() {
 
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
     const elements = page.querySelectorAll<HTMLElement>('[data-reveal]')
-    const scene = page.querySelector<HTMLElement>('[data-scroll-scene]')
+    const scenes = page.querySelectorAll<HTMLElement>('[data-scroll-scene]')
     let frame = 0
     const observer =
       'IntersectionObserver' in window
@@ -39,18 +39,19 @@ export function useScrollExperience() {
 
     function updateScene() {
       frame = 0
-      if (!scene) return
-      const progress = motion.matches
-        ? 1
-        : Math.min(
-            1,
-            Math.max(
-              0,
-              (window.innerHeight - scene.getBoundingClientRect().top) /
-                (window.innerHeight * 0.8),
-            ),
-          )
-      scene.style.setProperty('--scene-progress', progress.toFixed(3))
+      for (const scene of scenes) {
+        const progress = motion.matches
+          ? 1
+          : Math.min(
+              1,
+              Math.max(
+                0,
+                (window.innerHeight - scene.getBoundingClientRect().top) /
+                  (window.innerHeight * 0.8),
+              ),
+            )
+        scene.style.setProperty('--scene-progress', progress.toFixed(3))
+      }
     }
     function scheduleUpdate() {
       if (!frame) frame = window.requestAnimationFrame(updateScene)
@@ -78,7 +79,7 @@ export function useScrollExperience() {
       elements.forEach((element) => {
         delete element.dataset.revealState
       })
-      scene?.style.removeProperty('--scene-progress')
+      scenes.forEach((scene) => scene.style.removeProperty('--scene-progress'))
     }
   }, [])
 

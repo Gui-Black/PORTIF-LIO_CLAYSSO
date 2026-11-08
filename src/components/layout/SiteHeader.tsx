@@ -74,6 +74,12 @@ export function SiteHeader({ homePrefix = '' }: { homePrefix?: string }) {
           Trabalhos
         </a>
         <a
+          href={`${homePrefix}#experiencia`}
+          onClick={() => setMenuOpen(false)}
+        >
+          A experiência
+        </a>
+        <a
           className="nav-contact"
           href={`${homePrefix}#contato`}
           onClick={() => setMenuOpen(false)}

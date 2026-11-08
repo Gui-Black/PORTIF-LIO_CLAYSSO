@@ -2,9 +2,22 @@
 
 ## Estado atual
 
-Etapa 7 implementada no código em 8 de novembro de 2026. O usuário confirmou o upload funcionando após a migração da etapa 6. A migração das revisões e o roteiro real desta etapa ainda estão pendentes.
+Etapa 8 visual implementada no código em 8 de novembro de 2026, com aprovação visual e editorial pendente. A validação real das revisões da etapa 7 ainda precisa ser confirmada pelo usuário.
 
 A publicação contínua na Vercel foi adiada pelo usuário. O desenvolvimento segue local, sem provisionamento remoto ou deploy.
+
+## Etapa 8 — apresentação visual
+
+- [x] Completar seis cenas com a seção “Antes do primeiro clique”.
+- [x] Adicionar navegação para a experiência e orientar o primeiro contato.
+- [x] Estender a transição por rolagem a múltiplas cenas, preservando movimento reduzido.
+- [x] Ampliar legendas e adaptar a nova seção para celular e tablet.
+- [x] Executar lint, formatação, 59 testes, TypeScript e build.
+- [ ] Aprovar aparência, textos e recortes com Claysso.
+- [ ] Conferir navegador, teclado, movimento reduzido e larguras de 320 a 1440 px.
+- [ ] Confirmar conteúdo definitivo e preparar imagens para lançamento.
+
+A captura automatizada no navegador não produziu imagem; não há aprovação visual nesta sessão. Consulte [Direção visual](visual.md). Nenhuma migração, commit, push ou publicação remota foi realizada nesta etapa.
 
 ## Etapa 7
 

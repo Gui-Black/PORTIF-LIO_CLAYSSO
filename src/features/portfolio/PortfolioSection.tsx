@@ -25,7 +25,7 @@ export function PortfolioSection({
       tabIndex={-1}
       aria-labelledby="portfolio-title"
     >
-      <div className="portfolio-heading">
+      <div className="portfolio-heading" data-reveal>
         <div>
           <p className="eyebrow">03 — Histórias para explorar</p>
           <h2 id="portfolio-title">

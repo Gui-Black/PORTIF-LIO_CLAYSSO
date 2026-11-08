@@ -1,6 +1,7 @@
 import { ArrowIcon } from '../../components/ui/ArrowIcon'
 import { useScrollExperience } from './useScrollExperience'
 import { PortfolioSection } from '../portfolio/PortfolioSection'
+import { ExperienceSection } from './ExperienceSection'
 import type { PortfolioFilter, Work } from '../portfolio/portfolio-data'
 
 const instagramUrl = 'https://www.instagram.com/clicksmortyofc/'
@@ -167,6 +168,7 @@ export function HomePage({
       </section>
 
       <PortfolioSection filter={filter} items={items} />
+      <ExperienceSection />
 
       <section
         className="contact page-width"
@@ -174,7 +176,7 @@ export function HomePage({
         aria-labelledby="contact-title"
       >
         <div data-reveal>
-          <p className="eyebrow">Click’s do Morty · Por Claysso</p>
+          <p className="eyebrow">05 — Seu próximo momento</p>
           <h2 id="contact-title">
             Qual história
             <br />
@@ -194,6 +196,10 @@ export function HomePage({
             Chame no Instagram <ArrowIcon diagonal />
             <span className="sr-only"> (abre em nova aba)</span>
           </a>
+          <p className="contact-help">
+            Para começar, conte o tipo de fotografia, a data e o local que você
+            tem em mente.
+          </p>
         </div>
       </section>
       <footer className="site-footer page-width">

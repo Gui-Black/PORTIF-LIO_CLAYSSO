@@ -25,7 +25,7 @@
 }
 .hero-services {
   margin-top: 28px;
-  font-size: 0.64rem;
+  font-size: 0.8rem;
   letter-spacing: 0.08em;
   color: var(--muted);
 }
@@ -57,7 +57,7 @@
   color: white;
 }
 .hero-photo figcaption > span {
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.16em;
 }
@@ -85,7 +85,7 @@
   justify-content: space-between;
   padding-block: 26px;
   color: var(--muted);
-  font-size: 0.65rem;
+  font-size: 0.8rem;
   letter-spacing: 0.04em;
   border-bottom: 1px solid var(--line);
 }
@@ -128,7 +128,7 @@
 }
 .story-photo figcaption {
   color: var(--muted);
-  font-size: 0.68rem;
+  font-size: 0.85rem;
   margin-top: 16px;
   letter-spacing: 0.03em;
 }
@@ -212,7 +212,7 @@
 }
 .atmosphere-photo figcaption {
   margin-top: 16px;
-  font-size: 0.68rem;
+  font-size: 0.85rem;
   color: #ccc9bf;
 }
 .atmosphere-bottom {
@@ -256,7 +256,7 @@
   gap: 20px;
   border-top: 1px solid var(--line);
   padding-block: 26px;
-  font-size: 0.67rem;
+  font-size: 0.8rem;
   color: var(--muted);
 }
 .site-footer > span:first-child {

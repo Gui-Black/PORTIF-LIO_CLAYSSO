@@ -6,7 +6,7 @@ O projeto também serve como percurso de aprendizado em React, TypeScript e Supa
 
 ## Estado atual
 
-Etapa 7 implementada no código: edição de cópias de trabalhos publicados, ordenação e retirada reversível de fotos, retirada da galeria e preparação para republicar. O upload da etapa anterior foi confirmado pelo usuário após atualizar o banco. A nova migração e o teste real das revisões ainda precisam ser executados no ambiente local.
+Etapa 8 visual implementada: seis cenas na página inicial, transições por rolagem, seção sobre a experiência e melhorias de legibilidade. A aprovação visual e editorial continua pendente. O painel mantém cadastro, upload, publicação e revisões da etapa anterior.
 
 A validação separa testes da aplicação, testes SQL/RLS e integração com serviços reais. Os resultados e limites ficam em `docs/andamento.md`. A publicação na Vercel foi adiada por decisão do usuário; o desenvolvimento continua localmente.
 

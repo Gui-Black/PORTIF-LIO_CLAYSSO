@@ -1,4 +1,16 @@
-# Direção visual da etapa 2
+# Direção visual — etapas 2 e 8
+
+## Evolução da etapa 8
+
+A página tem seis cenas: abertura, pessoas e histórias, atmosfera escura, galeria, experiência antes do primeiro clique e contato. A nova seção `#experiencia` usa a fotografia de abraço já fornecida, com enquadramento em CSS, e apresenta três passos de conversa em linguagem simples. O texto é editorial e ainda precisa de aprovação de Claysso; não estabelece preços, prazos ou condições de contratação.
+
+O menu inclui **A experiência**. A transição de fundo responde à rolagem tanto na cena escura quanto na nova seção; os elementos entram suavemente na tela. A rolagem permanece nativa, sem prender a tela ou avançar automaticamente. Com movimento reduzido, o conteúdo aparece sem essas transições. Não foram adicionadas bibliotecas de animação.
+
+Legendas e textos pequenos da página inicial foram ampliados. A nova seção vira uma coluna no celular, e o cabeçalho economiza espaço em tablets. A chamada final orienta o visitante a informar tipo de fotografia, data e local pelo Instagram já configurado.
+
+Lint, formatação, 59 testes, TypeScript e build passaram. O servidor visual temporário iniciou, mas a tentativa de captura com Edge não produziu imagem. A aparência, a rolagem e os recortes **não foram validados visualmente** nesta sessão. Conferir em 320, 375, 768 e 1440 px, incluindo navegação por teclado, menu, âncoras, movimento reduzido e retorno da galeria.
+
+Não há nova migração nesta entrega. A galeria integrada depende das migrações das etapas anteriores. Novas fotografias, seleção editorial definitiva, WhatsApp confirmado, compressão e metadados das imagens continuam pendentes antes do lançamento.
 
 A demonstração explora a passagem entre uma abertura acolhedora, um retrato de celebração e uma cena escura com fotografia em preto e branco. O objetivo é avaliar o ritmo e a personalidade antes de construir a galeria.
 
