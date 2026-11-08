@@ -13,9 +13,11 @@ import { PortfolioImage } from './PortfolioImage'
 export function WorkPage({
   work,
   filter,
+  demo = false,
 }: {
   work: Work | undefined
   filter: PortfolioFilter
+  demo?: boolean
 }) {
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null)
   const backUrl = portfolioUrl(filter)
@@ -35,6 +37,11 @@ export function WorkPage({
       </a>
       {work ? (
         <>
+          {demo ? (
+            <p className="catalog-notice">
+              Seleção demonstrativa do protótipo.
+            </p>
+          ) : null}
           <header className="work-heading">
             <p className="eyebrow">
               {categoryName(work.category)} · {work.photos.length} fotografias

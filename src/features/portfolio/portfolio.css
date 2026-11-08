@@ -1,6 +1,16 @@
 .portfolio {
   padding-block: clamp(80px, 10vw, 140px);
 }
+.catalog-notice {
+  border: 1px solid var(--line);
+  background: #eee8db;
+  padding: 20px;
+  margin-block: 24px;
+  line-height: 1.7;
+}
+.catalog-notice .button {
+  margin-top: 16px;
+}
 .portfolio-heading {
   display: flex;
   align-items: flex-end;

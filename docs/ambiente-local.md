@@ -66,7 +66,7 @@ Os atalhos definem `SUPABASE_HOME` como `.supabase/runtime` dentro do projeto, u
 
 O seed contém somente dados fictícios e não cria contas, administradores ou fotos. Usar contas e imagens de teste nas próximas validações. Não colocar senhas, chaves administrativas ou tokens em arquivos versionados, capturas de tela ou mensagens.
 
-Ainda não há cliente Supabase no React e nenhuma variável de ambiente precisa ser preenchida agora. Quando conectarmos a interface, ela receberá somente URL local e chave pública adequada. Chaves secretas/`service_role` nunca entram em variáveis `VITE_*`, pois essas variáveis são incluídas no código enviado ao navegador.
+A interface usa o SDK Supabase desde a etapa 5. Configure somente URL local e chave publicável seguindo docs/autenticacao.md. Chaves secretas/`service_role` nunca entram em variáveis `VITE_*`, pois seus valores são enviados ao navegador.
 
 ## Validação após instalar Docker
 
@@ -87,7 +87,7 @@ Um resultado aprovado confirma somente saúde do Auth, categorias públicas, exi
 - Conferir as portas publicadas pelo Docker e sua restrição ao localhost.
 - Repetir a matriz de permissões com chamadas reais de Auth, PostgREST e Storage.
 - Validar upload/bytes, URLs assinadas e concorrência com conexões independentes.
-- Só então integrar login, sessão e recuperação de senha da etapa 5.
+- Executar os testes reais de login, sessão e recuperação já implementados na etapa 5.
 
 Os testes atuais em memória e os testes do script com respostas simuladas não substituem essa conferência.
 

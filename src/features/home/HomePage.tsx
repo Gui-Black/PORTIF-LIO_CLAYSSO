@@ -2,6 +2,7 @@ import { ArrowIcon } from '../../components/ui/ArrowIcon'
 import { useScrollExperience } from './useScrollExperience'
 import { PortfolioSection } from '../portfolio/PortfolioSection'
 import { ExperienceSection } from './ExperienceSection'
+import type { CatalogState } from '../portfolio/CatalogNotice'
 import type { PortfolioFilter, Work } from '../portfolio/portfolio-data'
 
 const instagramUrl = 'https://www.instagram.com/clicksmortyofc/'
@@ -9,9 +10,11 @@ const instagramUrl = 'https://www.instagram.com/clicksmortyofc/'
 export function HomePage({
   filter,
   items,
+  catalogState,
 }: {
   filter: PortfolioFilter
   items?: readonly Work[]
+  catalogState?: CatalogState
 }) {
   const pageRef = useScrollExperience()
 
@@ -167,7 +170,11 @@ export function HomePage({
         </div>
       </section>
 
-      <PortfolioSection filter={filter} items={items} />
+      <PortfolioSection
+        filter={filter}
+        items={items}
+        catalogState={catalogState}
+      />
       <ExperienceSection />
 
       <section

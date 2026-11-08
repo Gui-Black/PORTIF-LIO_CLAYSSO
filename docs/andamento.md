@@ -2,9 +2,23 @@
 
 ## Estado atual
 
-Etapa 8 visual implementada no código em 8 de novembro de 2026, com aprovação visual e editorial pendente. A validação real das revisões da etapa 7 ainda precisa ser confirmada pelo usuário.
+Homologação local (etapa 9) em andamento. Roteiro de aceite preparado e estados de falha da galeria corrigidos. Os testes reais no navegador, aprovação de Claysso e recuperação de dados continuam pendentes.
 
 A publicação contínua na Vercel foi adiada pelo usuário. O desenvolvimento segue local, sem provisionamento remoto ou deploy.
+
+## Etapa 9 — homologação local em andamento
+
+- [x] Corrigir indisponibilidade da galeria para preservar apresentação e contato.
+- [x] Distinguir carregamento, erro, vazio e seleções demonstrativas.
+- [x] Impedir que configuração parcial ative silenciosamente a demonstração.
+- [x] Adicionar testes de renderização dos estados públicos sem novas dependências.
+- [x] Executar 62 testes, lint, formatação, TypeScript e build com sucesso.
+- [x] Preparar roteiro de aceite, diagnóstico e recuperação em `docs/homologacao.md`.
+- [ ] Executar o roteiro real no navegador e registrar os resultados.
+- [ ] Aprovar aparência e conteúdo com Claysso.
+- [ ] Preparar e testar backup/restauração antes do lançamento.
+
+A homologação não está concluída e não houve publicação. A leitura de arquivos rastreados confirmou que somente `.env.example` está versionado entre os arquivos de ambiente e que `dist` não está versionado; isso não equivale a uma auditoria de segredos de todo o histórico. A validação de permissões continua baseada nos testes SQL, sem teste HTTP real nesta sessão.
 
 ## Etapa 8 — apresentação visual
 

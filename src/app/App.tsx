@@ -14,6 +14,7 @@ import {
 import { findWork, parseFilter } from '../features/portfolio/portfolio-data'
 import { WorkPage } from '../features/portfolio/WorkPage'
 import { usePublicCatalog } from '../features/portfolio/usePublicCatalog'
+import { CatalogNotice } from '../features/portfolio/CatalogNotice'
 
 const AuthPage = lazy(() => import('../features/auth/AuthPage'))
 
@@ -81,23 +82,35 @@ function PortfolioApp() {
         Pular para o conteúdo
       </a>
       <SiteHeader homePrefix={slug !== null ? '/' : ''} />
-      {catalog.status !== 'ready' ? (
+      {slug !== null && catalog.status !== 'ready' ? (
         <main id="conteudo" className="page-width">
-          <p role={catalog.status === 'error' ? 'alert' : 'status'}>
-            {catalog.status === 'error'
-              ? 'Não foi possível carregar a galeria. Tente novamente.'
-              : 'Carregando histórias…'}
-          </p>
-          {catalog.status === 'error' ? (
-            <button type="button" onClick={catalog.retry}>
-              Tentar novamente
-            </button>
-          ) : null}
+          <h1>Seleção de fotografias</h1>
+          <CatalogNotice
+            status={catalog.status}
+            demo={false}
+            retry={catalog.retry}
+          />
+          <a className="text-link" href="/#contato">
+            Voltar ao site e entrar em contato
+          </a>{' '}
         </main>
       ) : slug !== null ? (
-        <WorkPage key={slug} work={work} filter={filter} />
+        <WorkPage
+          key={slug}
+          work={work}
+          filter={filter}
+          demo={!catalog.configured}
+        />
       ) : (
-        <HomePage filter={filter} items={catalog.items} />
+        <HomePage
+          filter={filter}
+          items={catalog.items}
+          catalogState={{
+            status: catalog.status,
+            demo: !catalog.configured,
+            retry: catalog.retry,
+          }}
+        />
       )}
     </>
   )

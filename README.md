@@ -6,7 +6,7 @@ O projeto também serve como percurso de aprendizado em React, TypeScript e Supa
 
 ## Estado atual
 
-Etapa 8 visual implementada: seis cenas na página inicial, transições por rolagem, seção sobre a experiência e melhorias de legibilidade. A aprovação visual e editorial continua pendente. O painel mantém cadastro, upload, publicação e revisões da etapa anterior.
+Etapa 9 em homologação local: a apresentação e o contato permanecem disponíveis quando a galeria falha, e o modo demonstrativo é identificado. O roteiro de aceite está preparado; a validação no navegador e a aprovação visual/editorial ainda estão pendentes.
 
 A validação separa testes da aplicação, testes SQL/RLS e integração com serviços reais. Os resultados e limites ficam em `docs/andamento.md`. A publicação na Vercel foi adiada por decisão do usuário; o desenvolvimento continua localmente.
 
@@ -20,6 +20,7 @@ A validação separa testes da aplicação, testes SQL/RLS e integração com se
 - [Login, configuração e contas de teste](docs/autenticacao.md)
 - [Cadastro, fotos e publicação local](docs/gerenciamento.md)
 - [Revisões, retirada e recuperação](docs/revisoes.md)
+- [Homologação local e roteiro de aceite](docs/homologacao.md)
 
 ## Requisitos
 

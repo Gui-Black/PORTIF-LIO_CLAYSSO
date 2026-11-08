@@ -3,7 +3,7 @@ import { works, type Work } from './portfolio-data'
 
 export function usePublicCatalog() {
   const configured = Boolean(
-    import.meta.env.VITE_SUPABASE_URL &&
+    import.meta.env.VITE_SUPABASE_URL ||
     import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
   )
   const [state, setState] = useState<{
@@ -47,6 +47,9 @@ export function usePublicCatalog() {
   return {
     ...state,
     configured,
-    retry: () => setRevision((value) => value + 1),
+    retry: () => {
+      setState({ items: [], status: 'loading' })
+      setRevision((value) => value + 1)
+    },
   }
 }
