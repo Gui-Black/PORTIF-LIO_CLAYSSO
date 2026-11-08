@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import type { SupabaseClient } from '@supabase/supabase-js'
-import { listManagement, managementError } from './work-service'
+import {
+  listManagement,
+  managementError,
+  beginRevision,
+  unpublishWork,
+  type Draft,
+  type WorkSummary,
+} from './work-service'
 import { WorkEditor } from './WorkEditor'
 import './management.css'
 
@@ -21,6 +28,8 @@ export function WorkManager({
   const [reload, setReload] = useState(0)
   const [busy, setBusy] = useState(false)
   const [dirty, setDirty] = useState(false)
+  const [message, setMessage] = useState('')
+  const revisionIds = useRef(new Map<string, string>())
   const lock = useRef(false)
   const creation = useRef<{ work: string; version: string } | null>(null)
   useEffect(() => {
@@ -88,6 +97,61 @@ export function WorkManager({
     }
   }
 
+  async function manage(action: () => Promise<string | void>) {
+    if (lock.current || disabled || dirty) return
+    lock.current = true
+    setBusy(true)
+    setError('')
+    setMessage('')
+    try {
+      const nextDraftId = await action()
+      setCatalog(await listManagement(client))
+      if (typeof nextDraftId === 'string') setSelected(nextDraftId)
+    } catch (failure) {
+      setError(managementError(failure))
+    } finally {
+      lock.current = false
+      setBusy(false)
+    }
+  }
+
+  function editPublished(source: Draft) {
+    if (
+      !window.confirm(
+        'Criar uma cópia para editar? A publicação atual continua visível até você publicar as alterações.',
+      )
+    )
+      return
+    const id = revisionIds.current.get(source.id) ?? crypto.randomUUID()
+    revisionIds.current.set(source.id, id)
+    void manage(async () => {
+      const draftId = await beginRevision(client, source, id)
+      return draftId
+    })
+  }
+
+  function withdraw(work: WorkSummary) {
+    if (
+      !window.confirm(
+        'Retirar este trabalho da galeria? As fotos serão preservadas. Links de fotos já abertos podem funcionar por até uma hora.',
+      )
+    )
+      return
+    void manage(async () => {
+      await unpublishWork(client, work)
+      setMessage(
+        'Trabalho retirado da galeria. Você pode preparar uma cópia para publicar novamente.',
+      )
+    })
+  }
+
+  const selectedWorkId = catalog?.versions.find(
+    (version) => version.id === selected,
+  )?.work_id
+  const selectedIsPublished = Boolean(
+    catalog?.works.find((work) => work.id === selectedWorkId)
+      ?.published_version_id,
+  )
   if (selected && catalog)
     return (
       <WorkEditor
@@ -96,6 +160,7 @@ export function WorkManager({
         versionId={selected}
         categories={catalog.categories}
         disabled={disabled}
+        isPublished={selectedIsPublished}
         onLockChange={onLockChange}
         onBack={() => {
           setSelected(null)
@@ -106,6 +171,8 @@ export function WorkManager({
   return (
     <section className="work-management" aria-labelledby="manager-title">
       <h2 id="manager-title">Seus trabalhos</h2>
+      {message ? <p role="status">{message}</p> : null}
+      {busy ? <p role="status">Atualizando o trabalho…</p> : null}
       <p>
         Continue um trabalho abaixo ou abra “Criar novo trabalho”. Rascunhos
         ficam privados até você publicar.
@@ -119,7 +186,7 @@ export function WorkManager({
                   .length
               }
             </strong>{' '}
-            em rascunho
+            fora da galeria
           </span>
           <span>
             <strong>
@@ -153,13 +220,27 @@ export function WorkManager({
                 const published = catalog.versions.find(
                   (version) => version.id === work.published_version_id,
                 )
+                const latest =
+                  published ??
+                  catalog.versions
+                    .filter(
+                      (version) =>
+                        version.work_id === work.id && version.sealed_at,
+                    )
+                    .sort((a, b) => b.sealed_at!.localeCompare(a.sealed_at!))[0]
                 return (
                   <li key={work.id}>
                     <strong>
-                      {draft?.title || published?.title || work.slug}
+                      {draft?.title || latest?.title || work.slug}
                     </strong>
                     <span className="management-status">
-                      {work.published_version_id ? 'Publicado' : 'Rascunho'}
+                      {published
+                        ? draft
+                          ? 'Publicado · alterações em rascunho'
+                          : 'Publicado'
+                        : latest
+                          ? 'Fora da galeria'
+                          : 'Rascunho'}
                     </span>
                     {draft ? (
                       <button
@@ -169,12 +250,26 @@ export function WorkManager({
                       >
                         Continuar edição
                       </button>
-                    ) : (
-                      <p>
-                        A edição de uma nova versão será disponibilizada na
-                        próxima etapa.
-                      </p>
-                    )}
+                    ) : latest ? (
+                      <button
+                        type="button"
+                        disabled={dirty}
+                        onClick={() => editPublished(latest)}
+                      >
+                        {published
+                          ? 'Editar uma cópia'
+                          : 'Preparar nova publicação'}
+                      </button>
+                    ) : null}
+                    {published ? (
+                      <button
+                        type="button"
+                        disabled={dirty}
+                        onClick={() => withdraw(work)}
+                      >
+                        Retirar da galeria
+                      </button>
+                    ) : null}
                     {published ? (
                       <a
                         href={`/?trabalho=${encodeURIComponent(work.slug)}`}

@@ -9,6 +9,7 @@ export type StoredPhoto = {
   width: number
   height: number
   sort_order: number
+  removed_at: string | null
 }
 export type Draft = {
   id: string
@@ -73,7 +74,7 @@ export async function loadDraft(client: SupabaseClient, id: string) {
     fetchAllRows((start, end) =>
       client
         .from('photos')
-        .select('id,storage_path,alt_text,width,height,sort_order')
+        .select('id,storage_path,alt_text,width,height,sort_order,removed_at')
         .eq('version_id', id)
         .order('sort_order')
         .order('id')
@@ -83,7 +84,10 @@ export async function loadDraft(client: SupabaseClient, id: string) {
   if (version.error) throw new Error('Não foi possível carregar o rascunho.')
   return {
     version: version.data as Draft,
-    photos: photos as StoredPhoto[],
+    photos: (photos as StoredPhoto[]).filter((photo) => !photo.removed_at),
+    removedPhotos: (photos as StoredPhoto[]).filter(
+      (photo) => photo.removed_at,
+    ),
   }
 }
 
@@ -94,6 +98,8 @@ export function managementError(error: unknown) {
     return 'Outra alteração foi salva. Recarregue o rascunho antes de continuar.'
   if (code === '23505') return 'Esse endereço já está em uso. Escolha outro.'
   if (code === '42501') return 'Sua conta não tem permissão para essa operação.'
+  if (code === 'PGRST202' || code === '42883')
+    return 'Esta função precisa da atualização do banco local. Execute npm run supabase:migrate e recarregue a tela.'
   return 'Não foi possível confirmar a operação. Confira a conexão e recarregue antes de tentar novamente.'
 }
 
@@ -114,6 +120,58 @@ export async function publishDraft(client: SupabaseClient, draft: Draft) {
     p_work_id: draft.work_id,
     p_version_id: draft.id,
     p_expected_revision: draft.revision,
+  })
+  if (result.error) throw result.error
+}
+
+export async function beginRevision(
+  client: SupabaseClient,
+  source: Draft,
+  newId: string,
+) {
+  const result = await client.rpc('begin_work_revision', {
+    p_work_id: source.work_id,
+    p_source_version_id: source.id,
+    p_new_version_id: newId,
+  })
+  if (result.error) throw result.error
+  if (typeof result.data !== 'string')
+    throw new Error('Rascunho não confirmado')
+  return result.data
+}
+
+export async function unpublishWork(client: SupabaseClient, work: WorkSummary) {
+  const result = await client.rpc('unpublish_work', {
+    p_work_id: work.id,
+    p_expected_version_id: work.published_version_id,
+  })
+  if (result.error) throw result.error
+}
+
+export async function setPhotoRemoved(
+  client: SupabaseClient,
+  draft: Draft,
+  photoId: string,
+  removed: boolean,
+) {
+  const result = await client.rpc('set_draft_photo_removed', {
+    p_version_id: draft.id,
+    p_expected_revision: draft.revision,
+    p_photo_id: photoId,
+    p_removed: removed,
+  })
+  if (result.error) throw result.error
+}
+
+export async function reorderPhotos(
+  client: SupabaseClient,
+  draft: Draft,
+  ids: string[],
+) {
+  const result = await client.rpc('reorder_draft_photos', {
+    p_version_id: draft.id,
+    p_expected_revision: draft.revision,
+    p_photo_ids: ids,
   })
   if (result.error) throw result.error
 }

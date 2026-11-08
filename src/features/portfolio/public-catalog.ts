@@ -63,6 +63,7 @@ export async function loadPublishedWorks(signal: AbortSignal): Promise<Work[]> {
           .select('id,version_id,storage_path,alt_text,width,height,sort_order')
           .in('version_id', ids)
           .eq('upload_state', 'ready')
+          .is('removed_at', null)
           .order('sort_order')
           .order('id')
           .range(start, end)

@@ -9,7 +9,7 @@ import {
   type Draft,
 } from './work-service'
 import { prepareUpload, sendPhoto, type UploadJob } from './upload'
-import { DraftPhoto } from './DraftPhoto'
+import { PhotoCollection } from './PhotoCollection'
 import { UploadFailure } from './upload'
 
 export function WorkEditor({
@@ -17,6 +17,7 @@ export function WorkEditor({
   versionId,
   categories,
   disabled,
+  isPublished,
   onLockChange,
   onBack,
 }: {
@@ -24,6 +25,7 @@ export function WorkEditor({
   versionId: string
   categories: Category[]
   disabled: boolean
+  isPublished: boolean
   onLockChange: (locked: boolean) => void
   onBack: () => void
 }) {
@@ -182,6 +184,12 @@ export function WorkEditor({
       >
         Voltar aos trabalhos
       </button>
+      {isPublished && !data?.version.sealed_at ? (
+        <p className="management-notice">
+          Você está editando uma cópia. A versão atual continua na galeria até
+          você publicar estas alterações.
+        </p>
+      ) : null}
       <h2 id="editor-title">
         {data?.version.sealed_at
           ? 'Trabalho publicado'
@@ -306,42 +314,17 @@ export function WorkEditor({
               Sua seleção começa com a primeira foto. Use o formulário abaixo.
             </p>
           ) : null}
-          <ol className="draft-photos">
-            {data.photos.map((photo) => (
-              <li key={photo.id}>
-                <DraftPhoto client={client} photo={photo} />
-                <p>{photo.alt_text}</p>
-                <button
-                  type="button"
-                  aria-pressed={photo.id === form.cover_photo_id}
-                  disabled={
-                    disabled ||
-                    busy ||
-                    dirty ||
-                    failedUpload ||
-                    photo.id === form.cover_photo_id
-                  }
-                  onClick={() =>
-                    void perform(
-                      () =>
-                        saveDraft(client, {
-                          ...form,
-                          cover_photo_id: photo.id,
-                        }),
-                      'Capa salva. Você pode adicionar mais fotos ou publicar na etapa 3.',
-                    )
-                  }
-                >
-                  {photo.id === form.cover_photo_id
-                    ? '✓ Capa escolhida'
-                    : 'Usar como capa'}
-                </button>
-              </li>
-            ))}
-          </ol>
+          <PhotoCollection
+            client={client}
+            draft={form}
+            photos={data.photos}
+            removedPhotos={data.removedPhotos}
+            disabled={disabled || busy || dirty || failedUpload}
+            perform={perform}
+          />
           <p>
             JPEG, PNG ou WebP, até 10 MiB e 40 megapixels. A ordem segue os
-            envios.
+            envios; use Mover antes ou Mover depois para organizar.
           </p>
           <form
             onSubmit={(event) => void upload(event)}
@@ -439,9 +422,9 @@ export function WorkEditor({
             </ul>
             <p>
               As fotos só aparecem para visitantes depois de publicar. Confira
-              sua seleção e confirme que tem autorização para exibi-la. Nesta
-              versão do painel, um trabalho publicado ainda não pode ser
-              editado.
+              sua seleção e confirme que tem autorização para exibi-la. Se este
+              trabalho já está publicado, esta seleção substituirá a versão
+              atual.
             </p>
             <button
               className="auth-primary"

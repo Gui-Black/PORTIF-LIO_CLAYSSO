@@ -2,9 +2,23 @@
 
 ## Estado atual
 
-Etapa 6 implementada no código em 7 de novembro de 2026. A verificação inicial de leitura dos serviços Supabase passou no terminal do usuário, que também informou ter conseguido criar sua conta. O fluxo completo no navegador ainda precisa de validação.
+Etapa 7 implementada no código em 8 de novembro de 2026. O usuário confirmou o upload funcionando após a migração da etapa 6. A migração das revisões e o roteiro real desta etapa ainda estão pendentes.
 
 A publicação contínua na Vercel foi adiada pelo usuário. O desenvolvimento segue local, sem provisionamento remoto ou deploy.
+
+## Etapa 7
+
+- [x] Criar cópia de trabalho publicado preservando a versão pública e reutilizando arquivos.
+- [x] Reordenar fotos com validação de pertencimento e revisão.
+- [x] Retirar e restaurar fotos dentro do rascunho, limpando a capa quando necessário.
+- [x] Retirar trabalhos da galeria e preparar uma nova publicação.
+- [x] Proteger leitura pública contra fotos retiradas e alterações em versões seladas.
+- [x] Executar 59 testes, lint, formatação, TypeScript e build.
+- [ ] Aplicar a nova migração no Supabase real local.
+- [ ] Testar revisão, ordenação, retirada, restauração e republicação em navegador.
+- [ ] Testar concorrência em duas abas e layout/teclado no celular e desktop.
+
+Consultar [Revisões](revisoes.md). A exclusão desta entrega é lógica e reversível no rascunho. Limpeza de arquivos órfãos, exclusão definitiva, backups e recuperação de histórico arbitrário permanecem pendentes. Testes SQL usam PGlite, sem acesso ao Docker real pela sessão automatizada. Nenhum commit, push ou deploy foi executado pelo assistente.
 
 ## Etapa 6
 
@@ -16,11 +30,11 @@ A publicação contínua na Vercel foi adiada pelo usuário. O desenvolvimento s
 - [x] Paginar consultas para não truncar catálogos no limite de registros da API.
 - [x] Preservar o editor durante revalidação de sessão, bloqueando operações enquanto verifica acesso.
 - [x] Executar lint, formatação, 50 testes, TypeScript e build com sucesso.
-- [ ] Aplicar a migração de gerenciamento no Supabase local real.
+- [x] Usuário confirmou o envio funcionando após a orientação para aplicar a migração local.
 - [ ] Testar upload HTTP, retomada, publicação, acesso anônimo e concorrência em duas abas.
 - [ ] Conferir interação, acessibilidade e layout no navegador.
 
-O acesso ao Docker permanece negado para a sessão automatizada. Os testes usam PGlite e respostas simuladas; nenhuma validação visual ou ponta a ponta foi concluída pelo assistente. Seguir o [roteiro de gerenciamento](gerenciamento.md). Nenhum commit, push ou deploy foi executado. A próxima etapa inclui reordenação, remoção e revisão de trabalhos publicados.
+O acesso ao Docker permanece negado para a sessão automatizada. Os testes usam PGlite e respostas simuladas; nenhuma validação visual ou ponta a ponta foi concluída pelo assistente. Seguir o [roteiro de gerenciamento](gerenciamento.md). Nenhum commit, push ou deploy foi executado. Reordenação, retirada reversível e revisão de trabalhos foram implementadas na etapa 7.
 
 ## Etapa 5
 

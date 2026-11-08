@@ -178,6 +178,22 @@
 .draft-photos button {
   width: 100%;
 }
+.photo-order {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.photo-order button {
+  margin-right: 0;
+  padding: 10px 6px;
+  font-size: 0.9rem;
+}
+.removed-photos {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 20px;
+  margin: 20px 0;
+}
 .draft-photos button[aria-pressed='true'] {
   background: #e7eedf;
   border-color: #4a613f;

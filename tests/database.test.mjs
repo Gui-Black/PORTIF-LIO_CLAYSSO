@@ -788,6 +788,281 @@ test('foto exige Storage confirmado, permite retomada sem duplicar e publica pel
     )
   }))
 
+test('cópia de publicação preserva original, reutiliza arquivos e retoma sem duplicar', () =>
+  isolated(async () => {
+    const original = await readyDraft()
+    await asRole('authenticated', adminId)
+    await publish(original)
+    const newId = randomUUID()
+    const args = [original.workId, original.versionId, newId]
+    const sql = 'select public.begin_work_revision($1,$2,$3) as id'
+    assert.equal((await db.query(sql, args)).rows[0].id, newId)
+    assert.equal((await db.query(sql, args)).rows[0].id, newId)
+    assert.equal(
+      (await db.query(sql, [original.workId, original.versionId, randomUUID()]))
+        .rows[0].id,
+      newId,
+    )
+    const copy = (
+      await db.query('select * from public.photos where version_id=$1', [newId])
+    ).rows[0]
+    assert.notEqual(copy.id, original.cover.id)
+    assert.equal(copy.storage_path, original.cover.path)
+    assert.equal(
+      (
+        await db.query(
+          'select cover_photo_id from public.work_versions where id=$1',
+          [newId],
+        )
+      ).rows[0].cover_photo_id,
+      copy.id,
+    )
+    await asRole('anon')
+    assert.equal(
+      (
+        await db.query('select id from public.work_versions where id=$1', [
+          newId,
+        ])
+      ).rows.length,
+      0,
+    )
+    assert.equal(
+      (
+        await db.query(
+          'select published_version_id from public.works where id=$1',
+          [original.workId],
+        )
+      ).rows[0].published_version_id,
+      original.versionId,
+    )
+    await asRole('authenticated', adminId)
+    await publish({ workId: original.workId, versionId: newId })
+    await asRole('anon')
+    assert.equal(
+      (
+        await db.query(
+          'select published_version_id from public.works where id=$1',
+          [original.workId],
+        )
+      ).rows[0].published_version_id,
+      newId,
+    )
+  }))
+
+test('remover capa limpa a seleção, permite restaurar e não apaga o objeto', () =>
+  isolated(async () => {
+    const work = await readyDraft()
+    await asRole('authenticated', adminId)
+    const initial = await revision(work.versionId)
+    const sql = 'select public.set_draft_photo_removed($1,$2,$3,$4)'
+    await db.query(sql, [work.versionId, initial, work.cover.id, true])
+    await db.query(sql, [work.versionId, initial, work.cover.id, true])
+    assert.equal(
+      (
+        await db.query(
+          'select cover_photo_id from public.work_versions where id=$1',
+          [work.versionId],
+        )
+      ).rows[0].cover_photo_id,
+      null,
+    )
+    await fails(
+      'update public.work_versions set cover_photo_id=$1 where id=$2',
+      [work.cover.id, work.versionId],
+      '23514',
+    )
+    await fails(sql, [work.versionId, initial, work.cover.id, false], '40001')
+    assert.equal(
+      (
+        await db.query('select name from storage.objects where name=$1', [
+          work.cover.path,
+        ])
+      ).rows.length,
+      1,
+    )
+    await db.query(sql, [
+      work.versionId,
+      await revision(work.versionId),
+      work.cover.id,
+      false,
+    ])
+    assert.equal(
+      (
+        await db.query('select removed_at from public.photos where id=$1', [
+          work.cover.id,
+        ])
+      ).rows[0].removed_at,
+      null,
+    )
+  }))
+
+test('fotos retiradas ficam fora da publicação e da leitura pública de arquivos', () =>
+  isolated(async () => {
+    const work = await readyDraft()
+    const hidden = await photo(work.versionId, { position: 1 })
+    await asRole('authenticated', adminId)
+    await db.query('select public.set_draft_photo_removed($1,$2,$3,true)', [
+      work.versionId,
+      await revision(work.versionId),
+      hidden.id,
+    ])
+    await publish(work)
+    await fails(
+      'select public.set_draft_photo_removed($1,$2,$3,false)',
+      [work.versionId, await revision(work.versionId), hidden.id],
+      '23514',
+    )
+    await asRole('anon')
+    assert.equal(
+      (
+        await db.query('select id from public.photos where version_id=$1', [
+          work.versionId,
+        ])
+      ).rows.length,
+      1,
+    )
+    assert.equal(
+      (
+        await db.query('select name from storage.objects where name=$1', [
+          hidden.path,
+        ])
+      ).rows.length,
+      0,
+    )
+    assert.equal(
+      (
+        await db.query('select name from storage.objects where name=$1', [
+          work.cover.path,
+        ])
+      ).rows.length,
+      1,
+    )
+  }))
+
+test('ordenação valida lista completa, duplicações, pertencimento e revisão', () =>
+  isolated(async () => {
+    const work = await readyDraft()
+    const second = await photo(work.versionId, { position: 1 })
+    const removed = await photo(work.versionId, { position: 2 })
+    await asRole('authenticated', adminId)
+    await db.query('select public.set_draft_photo_removed($1,$2,$3,true)', [
+      work.versionId,
+      await revision(work.versionId),
+      removed.id,
+    ])
+    const current = await revision(work.versionId)
+    const sql = 'select public.reorder_draft_photos($1,$2,$3::uuid[])'
+    for (const ids of [
+      [second.id],
+      [second.id, second.id],
+      [second.id, randomUUID()],
+      [second.id, removed.id],
+      [second.id, null],
+    ]) {
+      await fails(sql, [work.versionId, current, ids], '22023')
+    }
+    await db.query(sql, [work.versionId, current, [second.id, work.cover.id]])
+    assert.deepEqual(
+      (
+        await db.query(
+          'select id from public.photos where version_id=$1 order by sort_order',
+          [work.versionId],
+        )
+      ).rows.map((row) => row.id),
+      [second.id, work.cover.id, removed.id],
+    )
+    await fails(
+      sql,
+      [work.versionId, current, [work.cover.id, second.id]],
+      '40001',
+    )
+    await db.query('select public.set_draft_photo_removed($1,$2,$3,false)', [
+      work.versionId,
+      await revision(work.versionId),
+      removed.id,
+    ])
+    assert.equal(
+      (
+        await db.query('select sort_order from public.photos where id=$1', [
+          removed.id,
+        ])
+      ).rows[0].sort_order,
+      2,
+    )
+  }))
+
+test('retirada e nova cópia permitem republicar sem reabrir versão selada', () =>
+  isolated(async () => {
+    const original = await readyDraft()
+    await asRole('authenticated', adminId)
+    await publish(original)
+    await fails(
+      'select public.unpublish_work($1,$2)',
+      [original.workId, randomUUID()],
+      '40001',
+    )
+    await db.query('select public.unpublish_work($1,$2)', [
+      original.workId,
+      original.versionId,
+    ])
+    await asRole('anon')
+    assert.equal(
+      (
+        await db.query('select id from public.works where id=$1', [
+          original.workId,
+        ])
+      ).rows.length,
+      0,
+    )
+    await asRole('authenticated', adminId)
+    const newId = randomUUID()
+    await db.query('select public.begin_work_revision($1,$2,$3)', [
+      original.workId,
+      original.versionId,
+      newId,
+    ])
+    await publish({ workId: original.workId, versionId: newId })
+    assert.equal(
+      (
+        await db.query(
+          'select published_version_id from public.works where id=$1',
+          [original.workId],
+        )
+      ).rows[0].published_version_id,
+      newId,
+    )
+  }))
+
+test('visitante e conta comum não criam revisões nem retiram ou ordenam fotos', () =>
+  isolated(async () => {
+    const work = await readyDraft()
+    await asRole('authenticated', adminId)
+    await publish(work)
+    for (const [role, uid] of [
+      ['anon', ''],
+      ['authenticated', memberId],
+    ]) {
+      await asRole(role, uid)
+      await fails('select public.begin_work_revision($1,$2,$3)', [
+        work.workId,
+        work.versionId,
+        randomUUID(),
+      ])
+      await fails('select public.set_draft_photo_removed($1,0,$2,true)', [
+        work.versionId,
+        work.cover.id,
+      ])
+      await fails('select public.reorder_draft_photos($1,0,$2::uuid[])', [
+        work.versionId,
+        [work.cover.id],
+      ])
+      await fails('select public.unpublish_work($1,$2)', [
+        work.workId,
+        work.versionId,
+      ])
+    }
+  }))
+
 test('todas as tabelas da aplicação usam RLS e funções privilegiadas fixam search_path', () =>
   isolated(async () => {
     const tables = await db.query(

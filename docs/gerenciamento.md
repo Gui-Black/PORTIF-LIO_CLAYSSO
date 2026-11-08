@@ -1,4 +1,4 @@
-# Cadastro e publicação de trabalhos — etapa 6
+# Cadastro, publicação e revisões — etapas 6 e 7
 
 O painel permite criar um trabalho, editar seu rascunho, enviar fotografias, escolher a capa e publicar a seleção na galeria. O desenvolvimento continua local: publicar um trabalho no banco local não faz deploy do site.
 
@@ -55,7 +55,7 @@ O navegador verifica formato e dimensões. O banco verifica autorização, revis
 
 ## Limites e verificações
 
-Reordenação, remoção de fotos, interface para retirar publicação e criação de uma nova versão de trabalho já publicado ficam para a próxima etapa. Uma versão publicada não é editada diretamente.
+O painel oferece reordenação, retirada e restauração de fotos do rascunho, retirada de publicação e criação de uma cópia para editar um trabalho publicado. Uma versão publicada não é editada diretamente. Exclusão definitiva de trabalhos, limpeza de arquivos órfãos e restauração de um histórico arbitrário ainda não têm interface.
 
 O site continua como protótipo local, sem deploy e com indexação desativada. Metadados para prévias em redes sociais ainda precisam de tratamento antes de uma publicação oficial.
 

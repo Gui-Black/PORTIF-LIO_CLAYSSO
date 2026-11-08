@@ -6,7 +6,7 @@ O projeto também serve como percurso de aprendizado em React, TypeScript e Supa
 
 ## Estado atual
 
-Etapa 6 implementada no código: cadastro de trabalhos, edição de rascunhos, upload, seleção de capa e publicação na galeria integrada ao Supabase. A aplicação das migrações e o teste completo no navegador ainda precisam ser confirmados no ambiente local.
+Etapa 7 implementada no código: edição de cópias de trabalhos publicados, ordenação e retirada reversível de fotos, retirada da galeria e preparação para republicar. O upload da etapa anterior foi confirmado pelo usuário após atualizar o banco. A nova migração e o teste real das revisões ainda precisam ser executados no ambiente local.
 
 A validação separa testes da aplicação, testes SQL/RLS e integração com serviços reais. Os resultados e limites ficam em `docs/andamento.md`. A publicação na Vercel foi adiada por decisão do usuário; o desenvolvimento continua localmente.
 
@@ -19,6 +19,7 @@ A validação separa testes da aplicação, testes SQL/RLS e integração com se
 - [Preparação do Supabase local no Windows](docs/ambiente-local.md)
 - [Login, configuração e contas de teste](docs/autenticacao.md)
 - [Cadastro, fotos e publicação local](docs/gerenciamento.md)
+- [Revisões, retirada e recuperação](docs/revisoes.md)
 
 ## Requisitos
 
