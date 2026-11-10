@@ -111,4 +111,4 @@ A proposta usa `main` como referência estável e branches curtas por funcionali
 
 O primeiro commit foi registrado pelo usuário e o repositório está conectado ao GitHub. Os próximos commits continuam sob responsabilidade do usuário.
 
-A publicação será tratada na etapa de homologação. O HTML provisório inclui `noindex, nofollow`, que deverá ser revisado antes da publicação oficial.
+A preparação do protótipo online foi autorizada, com `develop` para Previews e `main` preservada. O primeiro Preview está disponível; automação por push e validação administrativa hospedada continuam pendentes. Consulte [Publicação do protótipo](docs/preview-online.md) para endereço, conexões pendentes, variáveis, atualização e recuperação. O HTML provisório inclui `noindex, nofollow`, que deverá ser revisado antes da publicação oficial.

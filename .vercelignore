@@ -1,0 +1,8 @@
+.env
+.env.*
+.supabase
+.git
+node_modules
+dist
+assets/fotografias
+supabase/snippets

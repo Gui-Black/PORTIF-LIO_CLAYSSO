@@ -244,10 +244,12 @@
   color: var(--accent);
 }
 .contact p:not(.eyebrow) {
-  margin: 28px 0 32px;
   font-size: 0.9rem;
   line-height: 1.8;
   color: var(--muted);
+}
+.contact p:not(.eyebrow, .contact-help) {
+  margin: 28px 0 32px;
 }
 .site-footer {
   display: flex;
