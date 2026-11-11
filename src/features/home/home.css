@@ -1,3 +1,13 @@
+.reading-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  height: 3px;
+  z-index: 15;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  pointer-events: none;
+}
 .hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -103,6 +113,14 @@
   width: 38px;
   height: 38px;
   font-size: 1.3rem;
+  transition:
+    background 200ms ease,
+    transform 200ms ease;
+}
+.scroll-cue:hover span,
+.scroll-cue:focus-visible span {
+  background: var(--line);
+  transform: translateY(3px);
 }
 .story {
   padding-block: clamp(80px, 10vw, 160px);

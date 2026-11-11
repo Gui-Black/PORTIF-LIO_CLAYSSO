@@ -1,6 +1,14 @@
 # Preview online — preparação autorizada
 
-## Estado confirmado em 10 de novembro de 2026
+## Atualização de 11 de novembro de 2026
+
+- Preview atualizado: https://clicks-do-morty-preview-ju197owf8.vercel.app, deployment `dpl_AB6Qz4Q4koUjVH3dYhKWHDZckVdk`, estado `READY`, ambiente `staging` (Preview).
+- Origem: commit `66eb2a474750bce0ae41fefbd0e895d3bdfdb555`, enviado pelo usuário à `main`. Deploy manual como Preview, sem promoção a produção e sem atualizar `develop`.
+- HTML e CSS hospedados responderam HTTP 200. O CSS entregue contém `height: auto` na foto 4:3 e a regra que preserva a centralização de `.contact-help`. Conferência visual no navegador e testes administrativos permanecem pendentes.
+- Link de compartilhamento emitido em 11/11, válido por sete dias, entregue diretamente na conversa. Não versionar seu token. Ele permite visualizar o Preview sem conta Vercel; não concede acesso administrativo ao aplicativo.
+- O build remoto acusou formatação de `vercel.json`, embora o arquivo do commit passasse localmente. Para este deployment, o Ignored Build Step manteve o bloqueio de produção e acrescentou somente `vercel.json` à exclusão remota do Prettier antes de liberar o build. Lint, demais verificações de formatação, testes e build continuam em `npm run check`. Essa adaptação é específica da publicação e requer revisão antes de automatizar novos deploys.
+
+## Histórico da preparação
 
 - Repositório privado: `Gui-Black/PORTIF-LIO_CLAYSSO`.
 - Branch remota `develop` criada a partir de `3db88f2ec793534e9c091ab852f7e2e1e4099d06`; `main` preservada. Nenhum commit ou push foi feito pelo assistente.

@@ -20,6 +20,7 @@ export function HomePage({
 
   return (
     <main id="conteudo" ref={pageRef} tabIndex={-1}>
+      <div className="reading-progress" aria-hidden="true" />
       <section
         className="hero page-width"
         id="inicio"

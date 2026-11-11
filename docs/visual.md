@@ -1,5 +1,18 @@
 # Direção visual — etapas 2 e 8
 
+## Refinamento de movimento — 11 de novembro de 2026
+
+Referências pesquisadas: [35mm no Supahero](https://supahero.io/hero/35mm), [Did Global Cinema no Supahero](https://supahero.io/hero/did-global-cinema), [ScrollTrigger](https://gsap.com/docs/v3/Plugins/ScrollTrigger/) e [gsap.matchMedia](<https://gsap.com/docs/v3/GSAP/gsap.matchMedia()/>). As referências orientam uma apresentação centrada nas fotografias; nenhum template, foto ou código desses portfólios foi copiado.
+
+- Entrada sequenciada dos elementos da abertura e expansão suave do enquadramento da foto principal.
+- Movimento vertical discreto da foto principal durante a rolagem, apenas a partir de 760 px.
+- Revelação das fotografias de celebração e abraço ao entrarem na tela, preservando as dimensões do layout.
+- Barra decorativa de progresso no topo e resposta visual no convite para rolar, inclusive com foco pelo teclado.
+
+GSAP 3.15.1 e ScrollTrigger ficam em um módulo carregado dinamicamente pela página inicial. O hook desfaz animações, observadores e agendamentos ao desmontar; `matchMedia` reverte os efeitos ao ativar movimento reduzido. A rolagem continua nativa. Falha no carregamento do módulo mantém conteúdo e navegação disponíveis, com as revelações nativas anteriores. A animação de abertura não se repete quando a página retorna em uma posição de rolagem mais abaixo.
+
+Não houve publicação nesta entrega. Conferir localmente em desktop e celular: entrada inicial, âncoras, rolagem até o rodapé, galeria carregada após a página, retorno de um trabalho e alteração de movimento reduzido durante a sessão. Validação visual em navegador permanece pendente; verificações automatizadas não comprovam a aparência nem a fluidez.
+
 ## Evolução da etapa 8
 
 A página tem seis cenas: abertura, pessoas e histórias, atmosfera escura, galeria, experiência antes do primeiro clique e contato. A nova seção `#experiencia` usa a fotografia de abraço já fornecida, com enquadramento em CSS, e apresenta três passos de conversa em linguagem simples. O texto é editorial e ainda precisa de aprovação de Claysso; não estabelece preços, prazos ou condições de contratação.

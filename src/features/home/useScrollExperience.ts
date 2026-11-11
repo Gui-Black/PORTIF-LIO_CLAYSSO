@@ -6,6 +6,26 @@ export function useScrollExperience() {
   useEffect(() => {
     const page = pageRef.current
     if (!page) return
+    let disposed = false
+    let stopMotion: (() => void) | undefined
+
+    void import('./home-motion')
+      .then(({ startHomeMotion }) => {
+        if (!disposed) stopMotion = startHomeMotion(page)
+      })
+      .catch(() => {
+        // The existing native reveals and all navigation remain available.
+      })
+
+    return () => {
+      disposed = true
+      stopMotion?.()
+    }
+  }, [])
+
+  useEffect(() => {
+    const page = pageRef.current
+    if (!page) return
 
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
     const elements = page.querySelectorAll<HTMLElement>('[data-reveal]')
