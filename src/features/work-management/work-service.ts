@@ -99,7 +99,7 @@ export function managementError(error: unknown) {
   if (code === '23505') return 'Esse endereço já está em uso. Escolha outro.'
   if (code === '42501') return 'Sua conta não tem permissão para essa operação.'
   if (code === 'PGRST202' || code === '42883')
-    return 'Esta função precisa da atualização do banco local. Execute npm run supabase:migrate e recarregue a tela.'
+    return 'Esta operação precisa de um ajuste técnico. Peça ajuda ao responsável pelo site antes de tentar novamente.'
   return 'Não foi possível confirmar a operação. Confira a conexão e recarregue antes de tentar novamente.'
 }
 

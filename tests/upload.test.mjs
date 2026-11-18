@@ -10,10 +10,10 @@ import {
   findWork,
 } from '../src/features/portfolio/portfolio-data.ts'
 
-test('falhas de envio distinguem migração, revisão e Storage sem expor resposta interna', () => {
+test('falhas de envio orientam o fotógrafo sem comandos técnicos ou respostas internas', () => {
   assert.match(
     describeUploadFailure({ code: 'PGRST202' }, 'database'),
-    /supabase:migrate/,
+    /responsável pelo site/,
   )
   assert.match(
     describeUploadFailure({ code: '40001' }, 'database'),
@@ -31,6 +31,16 @@ test('falhas de envio distinguem migração, revisão e Storage sem expor respos
     describeUploadFailure({ message: 'token-secreto' }, 'storage'),
     /token-secreto/,
   )
+  for (const failure of [
+    { code: 'PGRST202' },
+    { code: '42883' },
+    { statusCode: '503' },
+  ]) {
+    assert.doesNotMatch(
+      describeUploadFailure(failure, 'database'),
+      /supabase|migrate|Storage/,
+    )
+  }
 })
 
 test('falha ao conferir tentativa anterior não dispara outro upload', async () => {
@@ -55,7 +65,7 @@ test('falha ao conferir tentativa anterior não dispara outro upload', async () 
   )
 })
 
-test('arquivo enviado com RPC ausente orienta migração e preserva tentativa', async () => {
+test('arquivo enviado com RPC ausente orienta suporte e preserva tentativa', async () => {
   const client = {
     storage: { from: () => ({ upload: async () => ({ error: null }) }) },
     rpc: async () => ({ error: { code: 'PGRST202' } }),
@@ -67,7 +77,7 @@ test('arquivo enviado com RPC ausente orienta migração e preserva tentativa', 
   }
   await assert.rejects(
     sendPhoto(client, job, 'version', 0, () => {}),
-    /supabase:migrate/,
+    /ajuste técnico/,
   )
   assert.equal(job.attempted, true)
 })

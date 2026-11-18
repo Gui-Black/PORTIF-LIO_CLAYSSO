@@ -4,8 +4,8 @@ import { PortfolioSection } from '../portfolio/PortfolioSection'
 import { ExperienceSection } from './ExperienceSection'
 import type { CatalogState } from '../portfolio/CatalogNotice'
 import type { PortfolioFilter, Work } from '../portfolio/portfolio-data'
-
-const instagramUrl = 'https://www.instagram.com/clicksmortyofc/'
+import { responsiveImage } from '../../lib/responsive-images'
+import { instagramUrl, contactUrl, contactChannel } from '../../lib/contact'
 
 export function HomePage({
   filter,
@@ -28,15 +28,20 @@ export function HomePage({
       >
         <div className="hero-copy">
           <p className="eyebrow">Um olhar para o que fica</p>
-          <h1 id="hero-title">
-            O instante
-            <br />
-            passa.
-            <br />
-            <em>
-              A história
-              <br />
-              fica.
+          <h1 id="hero-title" aria-label="O instante passa. A história fica.">
+            <span className="hero-line" aria-hidden="true">
+              <span data-hero-line>O instante</span>
+            </span>
+            <span className="hero-line" aria-hidden="true">
+              <span data-hero-line>passa.</span>
+            </span>
+            <em aria-hidden="true">
+              <span className="hero-line">
+                <span data-hero-line>A história</span>
+              </span>
+              <span className="hero-line">
+                <span data-hero-line>fica.</span>
+              </span>
             </em>
           </h1>
           <p className="hero-description">
@@ -50,6 +55,10 @@ export function HomePage({
         <figure className="hero-photo">
           <img
             src="/images/retrato-noiva.jpeg"
+            {...responsiveImage(
+              '/images/retrato-noiva.jpeg',
+              '(max-width: 759px) calc(100vw - 48px), (max-width: 1600px) 44vw, 680px',
+            )}
             alt="Noiva com buquê de rosas brancas, sob luzes quentes em um jardim."
             width="1206"
             height="2079"
@@ -90,6 +99,10 @@ export function HomePage({
           <figure className="story-photo" data-reveal>
             <img
               src="/images/celebracao.jpeg"
+              {...responsiveImage(
+                '/images/celebracao.jpeg',
+                '(max-width: 759px) calc(100vw - 48px), 50vw',
+              )}
               alt="Mulher sorrindo junto a uma ponte, com luzes de uma celebração ao fundo."
               width="1206"
               height="679"
@@ -144,6 +157,10 @@ export function HomePage({
             <div className="photo-window">
               <img
                 src="/images/noiva-preto-branco.jpeg"
+                {...responsiveImage(
+                  '/images/noiva-preto-branco.jpeg',
+                  '(max-width: 759px) calc(100vw - 48px), 50vw',
+                )}
                 alt="Retrato em preto e branco de uma noiva olhando para seu buquê."
                 width="1206"
                 height="2085"
@@ -197,11 +214,11 @@ export function HomePage({
           </p>
           <a
             className="button"
-            href={instagramUrl}
+            href={contactUrl}
             target="_blank"
             rel="noreferrer"
           >
-            Chame no Instagram <ArrowIcon diagonal />
+            Chame no {contactChannel} <ArrowIcon diagonal />
             <span className="sr-only"> (abre em nova aba)</span>
           </a>
           <p className="contact-help">

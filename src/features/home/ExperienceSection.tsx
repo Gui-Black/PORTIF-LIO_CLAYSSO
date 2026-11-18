@@ -1,5 +1,6 @@
 import { ArrowIcon } from '../../components/ui/ArrowIcon'
 import './experience.css'
+import { responsiveImage } from '../../lib/responsive-images'
 
 const steps = [
   {
@@ -40,6 +41,10 @@ export function ExperienceSection() {
           <figure className="experience-photo">
             <img
               src="/images/abraco.jpeg"
+              {...responsiveImage(
+                '/images/abraco.jpeg',
+                '(max-width: 759px) calc(100vw - 48px), 45vw',
+              )}
               alt="Dois homens se abraçando, em uma fotografia em preto e branco."
               loading="lazy"
               decoding="async"

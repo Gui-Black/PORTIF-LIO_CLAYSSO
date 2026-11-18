@@ -91,10 +91,15 @@ h3 em {
   color: var(--paper);
   background: var(--accent);
   font-size: 0.85rem;
-  transition: background 180ms ease;
+  transition:
+    background 180ms ease,
+    transform 180ms ease;
 }
-.button:hover {
+.button:is(:hover, :focus-visible) {
   background: var(--accent-dark);
+}
+.button:active {
+  transform: translateY(1px);
 }
 .text-link {
   display: inline-flex;
@@ -109,8 +114,8 @@ h3 em {
   flex-shrink: 0;
   transition: transform 180ms ease;
 }
-.text-link:hover svg,
-.button:hover svg {
+.text-link:is(:hover, :focus-visible) svg,
+.button:is(:hover, :focus-visible) svg {
   transform: translateX(3px);
 }
 .skip-link {
@@ -141,12 +146,14 @@ h3 em {
   transition:
     opacity 700ms ease,
     transform 700ms ease;
+  transition-delay: var(--reveal-delay, 0ms);
 }
 [data-reveal-state='pending'] {
   opacity: 0;
   transform: translateY(28px);
 }
 [data-reveal]:focus-within {
+  transition: none;
   opacity: 1;
   transform: none;
 }

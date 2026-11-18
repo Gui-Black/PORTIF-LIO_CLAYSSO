@@ -1,5 +1,17 @@
 # Preview online — preparação autorizada
 
+## Produção autorizada — 11 de novembro de 2026
+
+O usuário autorizou expressamente a publicação em produção para compartilhar o site sem login na Vercel. Esta decisão substitui a restrição de publicação descrita no histórico abaixo.
+
+- Deployment `dpl_FacRTW8MywzW4VJxHNKxuro2Gnmq`, ambiente `production`, estado `READY`, commit `66eb2a474750bce0ae41fefbd0e895d3bdfdb555`. Novo build da versão já publicada; alterações locais de animação não fazem parte desta entrega.
+- Site: https://clicks-do-morty-preview.vercel.app. Administrativo: https://clicks-do-morty-preview.vercel.app/?acesso=entrar. O nome contém `preview`, mas o ambiente deste deployment é Production.
+- Proteção Vercel ajustada para `prod_deployment_urls_and_all_previews`: domínio principal público, previews e URLs individuais protegidos. O painel conserva a autenticação e autorização próprias da aplicação.
+- As duas variáveis públicas de conexão foram habilitadas também em Production. O banco remoto continua sendo o mesmo do protótipo; esta publicação não cria isolamento de dados entre ambientes nem altera permissões no banco.
+- Build executou `npm run check`. O Ignored Build Step deste deployment libera produção e mantém a exclusão remota de formatação de `vercel.json`, já documentada abaixo. Nenhum commit ou push foi executado; a automação Git permanece pendente.
+- O domínio principal longo respondeu HTTP 200 tanto para `/` quanto para `/?acesso=entrar`, sem cookies, cabeçalhos de autenticação ou token de compartilhamento. Isso comprova a entrega pública do frontend, não um teste de login e upload.
+- Para recuperar uma versão anterior, criar um deployment de produção a partir do commit revisado, com as mesmas variáveis e verificações, e conferir os domínios após `READY`. Isso não reverte banco ou Storage. Nenhum plano pago foi contratado.
+
 ## Atualização de 11 de novembro de 2026
 
 - Preview atualizado: https://clicks-do-morty-preview-ju197owf8.vercel.app, deployment `dpl_AB6Qz4Q4koUjVH3dYhKWHDZckVdk`, estado `READY`, ambiente `staging` (Preview).

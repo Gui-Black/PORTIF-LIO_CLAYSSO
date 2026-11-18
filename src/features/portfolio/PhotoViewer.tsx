@@ -97,7 +97,13 @@ export function PhotoViewer({
         }}
       >
         {photo ? (
-          <PortfolioImage key={photo.id} photo={photo} eager />
+          <PortfolioImage
+            key={photo.id}
+            photo={photo}
+            eager
+            sizes="100vw"
+            announceLoading
+          />
         ) : (
           <p>Foto indisponível.</p>
         )}

@@ -5,6 +5,7 @@ import { AuthForm } from './AuthForm'
 import { useAdminSession } from './useAdminSession'
 import { WorkManager } from '../work-management/WorkManager'
 import './auth.css'
+import { usePageMetadata } from '../../app/usePageMetadata'
 
 function SessionContent({
   client,
@@ -140,8 +141,13 @@ export default function AuthPage({ route }: { route: string }) {
         ? 'Uma nova senha'
         : 'Seu olhar, seu espaço'
   const heading = useRef<HTMLHeadingElement>(null)
+  usePageMetadata(
+    `${title} | Click’s do Morty`,
+    'Acesso administrativo do fotógrafo.',
+    undefined,
+    true,
+  )
   useEffect(() => {
-    document.title = `${title} | Click’s do Morty`
     heading.current?.focus()
   }, [title])
   return (

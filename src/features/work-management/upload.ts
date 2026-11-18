@@ -9,25 +9,25 @@ export function describeUploadFailure(error: unknown, stage: UploadStage) {
   const status = 'statusCode' in details ? String(details.statusCode) : ''
   const name = 'name' in details ? String(details.name) : ''
   if (code === 'PGRST202' || code === '42883')
-    return 'A função de associar a foto não está disponível no banco. Execute npm run supabase:migrate no terminal do projeto e retome este envio.'
+    return 'O envio precisa de um ajuste técnico. Peça ajuda ao responsável pelo site e mantenha esta tela aberta para retomar o envio depois.'
   if (code === '40001')
     return 'O rascunho foi alterado. Clique em Recarregar rascunho e depois em Retomar envio pendente.'
   if (code === '42501' || status === '403' || status === '401')
-    return 'O envio foi recusado por falta de autorização. Confira a sessão e a permissão administrativa no Supabase.'
+    return 'O envio foi recusado por falta de autorização. Confira seu acesso com o responsável pelo site.'
   if (status === '413')
-    return 'O Storage recusou o tamanho do arquivo. Use uma foto de até 10 MiB.'
+    return 'A fotografia é maior que o permitido. Use um arquivo de até 10 MiB.'
   if (status === '409')
     return 'Já existe um arquivo para esta tentativa. Clique em Retomar envio pendente para conferir o arquivo e concluir a associação.'
   const operation = {
     check: 'conferir o arquivo da tentativa anterior',
-    storage: 'enviar o arquivo ao Storage',
+    storage: 'enviar a fotografia',
     database: 'associar a fotografia ao trabalho',
   }[stage]
   if (name === 'TimeoutError' || name === 'AbortError')
-    return `O tempo de espera terminou ao ${operation}. Confira se o Supabase local está respondendo e retome o envio.`
+    return `O tempo de espera terminou ao ${operation}. Confira sua conexão e clique em Retomar envio pendente.`
   if (stage === 'database')
-    return 'O arquivo está no Storage, mas não foi possível confirmar sua associação ao trabalho. Confira as migrações, recarregue o rascunho e retome o envio.'
-  return `Não foi possível ${operation}. Confira a conexão e o serviço Storage do Supabase local antes de retomar o envio.`
+    return 'A foto foi enviada, mas ainda não foi adicionada ao trabalho. Use Recarregar rascunho e depois Retomar envio pendente para concluir sem duplicar a foto.'
+  return `Não foi possível ${operation}. Confira sua conexão e clique em Retomar envio pendente. Se continuar, peça ajuda ao responsável pelo site.`
 }
 
 export function imageExtension(type: string, bytes: Uint8Array) {

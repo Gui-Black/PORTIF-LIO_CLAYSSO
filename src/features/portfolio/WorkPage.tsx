@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { ArrowIcon } from '../../components/ui/ArrowIcon'
 import {
   categoryName,
@@ -9,6 +9,9 @@ import {
 import { isLocalClick, returnToPortfolio } from './navigation'
 import { PhotoViewer } from './PhotoViewer'
 import { PortfolioImage } from './PortfolioImage'
+import { contactUrl, contactChannel } from '../../lib/contact'
+import { composeAlbum } from './album-layout'
+import { useScrollReveal } from '../../lib/useScrollReveal'
 
 export function WorkPage({
   work,
@@ -20,9 +23,17 @@ export function WorkPage({
   demo?: boolean
 }) {
   const [selectedPhoto, setSelectedPhoto] = useState<number | null>(null)
+  const pageRef = useRef<HTMLElement>(null)
+  useScrollReveal(pageRef)
+  const frames = composeAlbum(work?.photos ?? [])
   const backUrl = portfolioUrl(filter)
   return (
-    <main className="work-page page-width" id="conteudo" tabIndex={-1}>
+    <main
+      className="work-page page-width"
+      id="conteudo"
+      tabIndex={-1}
+      ref={pageRef}
+    >
       <a
         className="text-link work-back"
         href={backUrl}
@@ -51,22 +62,42 @@ export function WorkPage({
             <span>Toque em uma foto para olhar mais de perto.</span>
           </header>
           <div className="work-photos">
-            {work.photos.map((photo, index) => (
-              <button
-                className="work-photo"
-                type="button"
+            {frames.map(({ photo, index, placement }) => (
+              <figure
+                className={`album-frame album-frame--${placement}`}
                 key={photo.id}
-                onClick={() => setSelectedPhoto(index)}
-                aria-label={`Ampliar foto ${index + 1}: ${photo.alt}`}
+                data-reveal
               >
-                <PortfolioImage photo={photo} eager={index < 2} />
-                <span className="photo-expand" aria-hidden="true">
-                  Ampliar ↗
-                </span>
-              </button>
+                <button
+                  className="work-photo"
+                  type="button"
+                  onClick={() => setSelectedPhoto(index)}
+                  aria-label={`Ampliar foto ${index + 1}: ${photo.alt}`}
+                >
+                  <PortfolioImage
+                    photo={photo}
+                    eager={index === 0}
+                    sizes={
+                      placement === 'wide'
+                        ? '(max-width: 1600px) 91vw, 1440px'
+                        : placement === 'pair' || placement === 'pair-offset'
+                          ? '(max-width: 759px) calc(100vw - 48px), 45vw'
+                          : '(max-width: 759px) calc(100vw - 48px), 740px'
+                    }
+                  />
+                  <span className="photo-expand" aria-hidden="true">
+                    Ampliar <ArrowIcon diagonal />
+                  </span>
+                </button>
+                <figcaption className="album-photo-index" aria-hidden="true">
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <span className="album-index-line" />
+                  <span>{String(work.photos.length).padStart(2, '0')}</span>
+                </figcaption>
+              </figure>
             ))}
           </div>
-          <div className="work-contact">
+          <div className="work-contact" data-reveal>
             <h2>
               Sua história também
               <br />
@@ -74,12 +105,15 @@ export function WorkPage({
             </h2>
             <a
               className="button"
-              href="https://www.instagram.com/clicksmortyofc/"
+              href={contactUrl}
               target="_blank"
               rel="noreferrer"
             >
               Vamos conversar <ArrowIcon diagonal />
-              <span className="sr-only"> no Instagram (abre em nova aba)</span>
+              <span className="sr-only">
+                {' '}
+                no {contactChannel} (abre em nova aba)
+              </span>
             </a>
           </div>
           {selectedPhoto !== null ? (

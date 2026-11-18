@@ -10,6 +10,7 @@ import {
 import { changeFilter, isLocalClick, openWork } from './navigation'
 import { PortfolioImage } from './PortfolioImage'
 import { CatalogNotice, type CatalogState } from './CatalogNotice'
+import type { CSSProperties } from 'react'
 
 export function PortfolioSection({
   filter,
@@ -73,12 +74,21 @@ export function PortfolioSection({
               : 'seleções disponíveis'}
           </p>
           {filteredWorks.length ? (
-            <div className="work-grid">
-              {filteredWorks.map((work) => (
+            <div
+              className={`work-grid${filteredWorks.length === 1 ? ' work-grid-single' : ''}`}
+              key={filter}
+            >
+              {filteredWorks.map((work, index) => (
                 <a
                   className="work-card"
                   id={`work-${work.slug}`}
                   key={work.slug}
+                  data-reveal
+                  style={
+                    {
+                      '--reveal-delay': `${(index % 2) * 100}ms`,
+                    } as CSSProperties
+                  }
                   href={portfolioUrl(filter, work.slug)}
                   onClick={(event) => {
                     if (isLocalClick(event)) {
@@ -91,7 +101,14 @@ export function PortfolioSection({
                   }}
                 >
                   <div className="work-cover">
-                    <PortfolioImage photo={work.cover} />
+                    <PortfolioImage
+                      photo={work.cover}
+                      sizes={
+                        filteredWorks.length === 1
+                          ? '(max-width: 759px) calc(100vw - 48px), (max-width: 850px) 90vw, 760px'
+                          : undefined
+                      }
+                    />
                     <span className="work-open">
                       Ver seleção <ArrowIcon diagonal />
                     </span>
@@ -108,8 +125,16 @@ export function PortfolioSection({
             </div>
           ) : (
             <div className="portfolio-empty">
-              <h3>Novas histórias vêm aí.</h3>
-              <p>Ainda não há trabalhos nesta categoria.</p>
+              <h3>
+                {catalogState?.incomplete && !items?.length
+                  ? 'Seleções indisponíveis no momento.'
+                  : 'Novas histórias vêm aí.'}
+              </h3>
+              <p>
+                {catalogState?.incomplete && !items?.length
+                  ? 'Use Tentar carregar as fotos acima ou entre em contato para conhecer o trabalho.'
+                  : 'Ainda não há trabalhos nesta categoria.'}
+              </p>
               <button
                 className="button"
                 type="button"

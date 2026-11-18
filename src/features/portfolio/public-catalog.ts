@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { readSupabaseConfig } from '../../lib/supabase-config'
-import { categories, type Work } from './portfolio-data'
+import type { Work } from './portfolio-data'
+import { selectPublishedWorks } from './catalog-selection'
 import { fetchAllRows as pages } from '../../lib/pagination'
 
 const config = readSupabaseConfig(
@@ -29,7 +30,7 @@ const client = config
     })
   : null
 
-export async function loadPublishedWorks(signal: AbortSignal): Promise<Work[]> {
+export async function loadPublishedCatalog(signal: AbortSignal) {
   if (!client) throw new Error('Configuração indisponível.')
   const api = client
   const works = await pages((start, end) =>
@@ -42,8 +43,9 @@ export async function loadPublishedWorks(signal: AbortSignal): Promise<Work[]> {
       .range(start, end)
       .abortSignal(signal),
   )
-  if (!works.length) return []
+  if (!works.length) return { items: [], incomplete: false }
   const output: Work[] = []
+  let incomplete = false
   for (let offset = 0; offset < works.length; offset += 50) {
     const batch = works.slice(offset, offset + 50)
     const ids = batch.map((work) => work.published_version_id as string)
@@ -81,47 +83,24 @@ export async function loadPublishedWorks(signal: AbortSignal): Promise<Work[]> {
       )
       if (signed.error) throw new Error('Falha ao carregar fotografias.')
       for (const item of signed.data) {
-        if (!item.path || !item.signedUrl || item.error)
-          throw new Error('Fotografia indisponível.')
-        urls.set(item.path, item.signedUrl)
+        if (item.path && item.signedUrl && !item.error)
+          urls.set(item.path, item.signedUrl)
       }
     }
-    for (const work of batch) {
-      const version = versions.find(
-        (entry) => entry.id === work.published_version_id,
-      )
-      if (!version) continue
-      const category = categoryResult.data.find(
-        (entry) => entry.id === version.category_id,
-      )
-      const knownCategory = categories.find(
-        (entry) => entry.slug === category?.slug,
-      )
-      if (!knownCategory)
-        throw new Error('Categoria não suportada nesta versão.')
-      const selection = photos
-        .filter((photo) => photo.version_id === version.id)
-        .map((photo) => ({
-          id: photo.id as string,
-          src: urls.get(photo.storage_path) ?? '',
-          alt: photo.alt_text as string,
-          width: photo.width as number,
-          height: photo.height as number,
-        }))
-      const cover = selection.find(
-        (photo) => photo.id === version.cover_photo_id,
-      )
-      if (!cover || selection.some((photo) => !photo.src))
-        throw new Error('Seleção incompleta.')
-      output.push({
-        slug: work.slug,
-        title: version.title,
-        description: version.description,
-        category: knownCategory.slug,
-        cover,
-        photos: selection,
-      })
-    }
+    signal.throwIfAborted()
+    const selection = selectPublishedWorks(
+      batch,
+      versions,
+      photos,
+      categoryResult.data,
+      urls,
+    )
+    output.push(...selection.items)
+    incomplete ||= selection.incomplete
   }
-  return output
+  return { items: output, incomplete }
+}
+
+export async function loadPublishedWorks(signal: AbortSignal): Promise<Work[]> {
+  return (await loadPublishedCatalog(signal)).items
 }

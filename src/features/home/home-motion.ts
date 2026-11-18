@@ -13,23 +13,58 @@ export function startHomeMotion(page: HTMLElement) {
     '(prefers-reduced-motion: no-preference)',
     () => {
       if (window.scrollY < 100) {
-        gsap.from(select('.hero-copy > *'), {
-          y: 22,
-          opacity: 0,
-          duration: 0.8,
-          stagger: 0.09,
-          ease: 'power2.out',
-          clearProps: 'transform,opacity',
-        })
-        gsap.fromTo(
+        const intro = gsap.timeline({ defaults: { ease: 'power3.out' } })
+        intro.from(
+          select('.hero-copy .eyebrow'),
+          {
+            y: 10,
+            opacity: 0,
+            duration: 0.55,
+            clearProps: 'transform,opacity',
+          },
+          0,
+        )
+        intro.from(
+          select('[data-hero-line]'),
+          {
+            yPercent: 110,
+            opacity: 0,
+            duration: 0.85,
+            stagger: 0.1,
+            clearProps: 'transform,opacity',
+          },
+          0.08,
+        )
+        intro.from(
+          select('.hero-description, .hero-copy .button, .hero-services'),
+          {
+            y: 14,
+            opacity: 0,
+            duration: 0.65,
+            stagger: 0.08,
+            clearProps: 'transform,opacity',
+          },
+          0.4,
+        )
+        intro.fromTo(
           select('.hero-photo'),
-          { clipPath: 'inset(5% 5% 5% 5%)' },
+          { clipPath: 'inset(7% 4% 7% 4%)' },
           {
             clipPath: 'inset(0% 0% 0% 0%)',
-            duration: 1.2,
-            ease: 'power3.out',
+            duration: 1.1,
             clearProps: 'clipPath',
           },
+          0.05,
+        )
+        intro.from(
+          select('.hero-photo figcaption'),
+          {
+            y: 18,
+            opacity: 0,
+            duration: 0.7,
+            clearProps: 'transform,opacity',
+          },
+          0.5,
         )
       }
 

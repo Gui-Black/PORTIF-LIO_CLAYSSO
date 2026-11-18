@@ -15,6 +15,7 @@ import { findWork, parseFilter } from '../features/portfolio/portfolio-data'
 import { WorkPage } from '../features/portfolio/WorkPage'
 import { usePublicCatalog } from '../features/portfolio/usePublicCatalog'
 import { CatalogNotice } from '../features/portfolio/CatalogNotice'
+import { usePageMetadata } from './usePageMetadata'
 
 const AuthPage = lazy(() => import('../features/auth/AuthPage'))
 
@@ -44,6 +45,13 @@ function PortfolioApp() {
   const slug = params.get('trabalho')
   const filter = parseFilter(params.get('categoria'))
   const work = slug !== null ? findWork(slug, catalog.items) : undefined
+  usePageMetadata(
+    slug !== null
+      ? `${work?.title ?? (catalog.status === 'ready' ? 'Trabalho não encontrado' : 'Seleção de fotografias')} | Click’s do Morty`
+      : 'Click’s do Morty | Fotografia em Guarulhos',
+    work?.description || undefined,
+    slug,
+  )
 
   useEffect(() => {
     const previous = window.history.scrollRestoration
@@ -54,10 +62,6 @@ function PortfolioApp() {
   }, [])
 
   useLayoutEffect(() => {
-    document.title =
-      slug !== null
-        ? `${work?.title ?? 'Trabalho não encontrado'} | Click’s do Morty`
-        : 'Click’s do Morty | Fotografia em Guarulhos'
     if (slug !== null) {
       window.scrollTo({ top: 0, behavior: 'instant' })
       document.getElementById('conteudo')?.focus({ preventScroll: true })
@@ -109,6 +113,7 @@ function PortfolioApp() {
             status: catalog.status,
             demo: !catalog.configured,
             retry: catalog.retry,
+            incomplete: catalog.incomplete,
           }}
         />
       )}
