@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-const siteUrl = 'https://clicks-do-morty-preview.vercel.app/'
+const siteUrl = 'https://clicksdomorty.com/'
 const defaultDescription =
   'Fotografia em Guarulhos e São Paulo. Ensaios, casamentos, aniversários, eventos e produtos. Conheça o olhar do Click’s do Morty e converse sobre seu próximo momento.'
 

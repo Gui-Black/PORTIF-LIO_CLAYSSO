@@ -2,4 +2,4 @@ User-agent: *
 Disallow: /
 
 # Protótipo: liberar somente após aprovação do lançamento e revisão do noindex.
-Sitemap: https://clicks-do-morty-preview.vercel.app/sitemap.xml
+Sitemap: https://clicksdomorty.com/sitemap.xml

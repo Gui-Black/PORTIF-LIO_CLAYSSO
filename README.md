@@ -6,9 +6,9 @@ O projeto também serve como percurso de aprendizado em React, TypeScript e Supa
 
 ## Estado atual
 
-Etapa 9 em homologação local: a apresentação e o contato permanecem disponíveis quando a galeria falha, e o modo demonstrativo é identificado. O roteiro de aceite está preparado; a validação no navegador e a aprovação visual/editorial ainda estão pendentes.
+Preview do commit `7d08b11` aprovado pelo usuário e publicado na Vercel. A versão local prepara o domínio escolhido `clicksdomorty.com` e o lançamento no Cloudflare Pages, mantendo o Supabase existente. Registro do domínio, acesso à conta Cloudflare e publicação nessa hospedagem ainda estão pendentes.
 
-A validação separa testes da aplicação, testes SQL/RLS e integração com serviços reais. Os resultados e limites ficam em `docs/andamento.md`. A publicação na Vercel foi adiada por decisão do usuário; o desenvolvimento continua localmente.
+A validação separa testes da aplicação, testes SQL/RLS e integração com serviços reais. Os resultados históricos ficam em `docs/andamento.md`; a revisão de segurança e os passos atuais para publicar estão em [Lançamento com domínio próprio](docs/lancamento-com.md). A indexação continua bloqueada até o domínio estar ativo e o lançamento ser concluído.
 
 - [Planejamento aprovado](docs/planejamento.md)
 - [Andamento e verificações](docs/andamento.md)

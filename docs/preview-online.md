@@ -1,5 +1,14 @@
 # Preview online — preparação autorizada
 
+## Preview verificado - 17 de novembro de 2026
+
+- Deployment `dpl_Qu4oJ4R4isP7Ro6PqcTYFkxpzXCV`, estado `READY`, ambiente `staging` (Preview), origem exata `7d08b11f55750fb9503e85acfbefc0756b359732` do repositório `Gui-Black/PORTIF-LIO_CLAYSSO`.
+- Endereço: https://clicks-do-morty-preview-nqfakhhdp.vercel.app. Acesso administrativo: `/?acesso=entrar`. Link temporário para convidados entregue na conversa, válido por 23 horas a partir da emissão; seu token não deve ser versionado. O login administrativo da aplicação continua necessário.
+- O build remoto executou `npm run check`: lint, formatação, 73 testes, TypeScript e Vite aprovados. A primeira tentativa (`dpl_6YiYPZLJNuGts2JXFde84FL7Wm1D`) falhou somente na formatação de `vercel.json`, como no histórico abaixo. A nova tentativa usou um Ignored Build Step exclusivo do deployment que mantém o bloqueio de produção e acrescenta apenas `vercel.json` ao `.prettierignore` remoto. Não houve mudança dessa exclusão nos arquivos locais.
+- Página inicial, endereço administrativo, JavaScript e CSS publicados responderam HTTP 200 pela ferramenta de acesso autenticado da Vercel. HTML e resposta mantêm `noindex, nofollow`. Essas leituras não executam a interface nem comprovam login ou upload no Preview novo; o usuário já havia aprovado visual e fluxo administrativo antes deste deploy.
+- O alias público `clicks-do-morty-preview.vercel.app` foi conferido após a conclusão e continua em `dpl_7j7rdTajPt8ckTedR2XhAFcBfooT`. Nenhuma promoção, commit, push, alteração de variável, banco ou Storage foi executada. Preview e produção continuam usando o mesmo Supabase.
+- Pendência: `npm audit --json` confirmou 11 entradas de severidade alta na cadeia de ferramentas de desenvolvimento, originadas do alerta de ReDoS de `picomatch` (`GHSA-fc5q-39xc-vjpf`) e propagadas por Vite e TypeScript ESLint. Dependências foram preservadas neste deploy; revisar uma atualização compatível antes do lançamento. Nenhum `audit fix --force` foi executado.
+
 ## Produção autorizada — 11 de novembro de 2026
 
 O usuário autorizou expressamente a publicação em produção para compartilhar o site sem login na Vercel. Esta decisão substitui a restrição de publicação descrita no histórico abaixo.
